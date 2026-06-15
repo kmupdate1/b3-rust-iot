@@ -9,3 +9,7 @@ version = "0.1.0"
 [[package]]
 name = "firmware"
 version = "0.1.0"
+
+[[package]]
+name = "led"
+version = "0.1.0"

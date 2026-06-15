@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = ["core", "firmware"]
+members = ["core", "firmware", "sensors/led"]
 
 [workspace.package]
 edition = "2024"
