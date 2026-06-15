@@ -29,7 +29,7 @@ fixed = "1.23.1"
 fixed-macro = "1.2"
 
 serde = { version = "1.0.203", default-features = false, features = ["derive"] }
-serde-json-core = "0.5.1"
+serde-json-core = "0.6.0"
 
 # for assign resources example
 assign-resources = { git = "https://github.com/adamgreig/assign-resources", rev = "bd22cb7a92031fb16f74a5da42469d466c33383e" }

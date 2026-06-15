@@ -5,7 +5,22 @@
       <sourceFolder url="file://$MODULE_DIR$/core/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/firmware/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/sensors/led/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/vendor/embassy/embassy-embedded-hal/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/vendor/embassy/embassy-executor-macros/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/vendor/embassy/embassy-executor-timer-queue/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/vendor/embassy/embassy-executor/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/vendor/embassy/embassy-executor/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/vendor/embassy/embassy-futures/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/vendor/embassy/embassy-hal-internal/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/vendor/embassy/embassy-rp/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/vendor/embassy/embassy-sync/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/vendor/embassy/embassy-sync/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/vendor/embassy/embassy-time-driver/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/vendor/embassy/embassy-time-queue-utils/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/vendor/embassy/embassy-time/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/vendor/embassy/embassy-usb-driver/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/embassy/embassy-executor/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
