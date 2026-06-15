@@ -1,0 +1,7 @@
+[package]
+name = "moisture"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+build = "build.rs"

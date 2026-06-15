@@ -1,6 +1,15 @@
 [workspace]
 resolver = "3"
-members = ["core", "firmware", "sensors/led"]
+members = [
+    "libs/core",
+    "libs/firmware",
+    "libs/driver",
+    "sensors/moisture",
+    "sensors/photo-register",
+    "sensors/thermistor",
+    "examples/led",
+    "examples/wifi",
+]
 
 [workspace.package]
 edition = "2024"
