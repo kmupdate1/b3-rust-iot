@@ -7,6 +7,9 @@ members = [
     "sensors/moisture",
     "sensors/photo-register",
     "sensors/thermistor",
+    "app",
+
+    "examples/gpio",
     "examples/led",
     "examples/wifi",
 ]
