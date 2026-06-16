@@ -1,6 +1,6 @@
 [package]
-name = "core"
+name = "stm32c0"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
-license.workspace = true
+license .workspace = true

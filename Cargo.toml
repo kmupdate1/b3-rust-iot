@@ -1,12 +1,13 @@
 [workspace]
 resolver = "3"
 members = [
-    "libs/core",
-    "libs/firmware",
-    "libs/driver",
-    "sensors/moisture",
-    "sensors/photo-register",
-    "sensors/thermistor",
+    "domain",
+    "hal/rp235x",
+    "hal/stm32c0",
+    "drivers/moisture",
+    "drivers/photo-register",
+    "drivers/thermistor",
+    "drivers/network/thread",
     "app",
 
     "examples/gpio",

@@ -31,11 +31,11 @@ async fn main(_spawner: Spawner) {
         led.set_high();
 
         // async_input.wait_for_high().await;
-        Timer::after_millis(500).await;
+        Timer::after_millis(50).await;
         // info!("done wait_for_high. Turn off LED");
         led.set_low();
 
-        Timer::after_millis(500).await;
+        Timer::after_millis(50).await;
         // Timer::after_secs(2).await;
     }
 }

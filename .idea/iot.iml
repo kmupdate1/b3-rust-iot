@@ -5,10 +5,26 @@
       <sourceFolder url="file://$MODULE_DIR$/app/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/app/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/core/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/domain/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/domain/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/drivers/moisture/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/drivers/moisture/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/drivers/network/thread/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/drivers/network/thread/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/drivers/photo-register/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/drivers/photo-register/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/drivers/thermistor/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/drivers/thermistor/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/examples/gpio/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/examples/led/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/examples/wifi/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/firmware/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/hal/rp235x/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/hal/rp235x/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/hal/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/hal/stm32c0/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/hal/stm32c0/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/hal/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/libs/core/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/libs/core/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/libs/driver/src" isTestSource="false" />
