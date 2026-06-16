@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package iot;
+
+message EnvironmentData {
+  float temperature = 1;
+  float luminosity = 2;
+  float moisture = 3;
+  uint32 battery_level = 10;
+}
