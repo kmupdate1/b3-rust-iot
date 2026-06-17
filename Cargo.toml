@@ -2,17 +2,20 @@
 resolver = "3"
 members = [
     "domain",
+    "hal/traits",
     "hal/rp235x",
     "hal/stm32c0",
     "drivers/moisture",
     "drivers/photo-register",
     "drivers/thermistor",
+    "drivers/network/tcpip",
     "drivers/network/thread",
+    "drivers/network/wifi",
     "app",
 
     "examples/gpio",
     "examples/led",
-    "examples/wifi",
+    "examples/wf",
 ]
 
 [workspace.package]
