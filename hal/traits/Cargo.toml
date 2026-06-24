@@ -1,5 +1,5 @@
 [package]
-name = "traits"
+name = "hal-traits"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true

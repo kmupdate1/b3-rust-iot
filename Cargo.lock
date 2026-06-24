@@ -1179,6 +1179,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "hal-traits"
+version = "0.1.0"
+
+[[package]]
 name = "half"
 version = "2.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2045,6 +2049,9 @@ dependencies = [
 [[package]]
 name = "rp235x"
 version = "0.1.0"
+dependencies = [
+ "hal-traits",
+]
 
 [[package]]
 name = "rtos-trace"
@@ -2624,10 +2631,6 @@ dependencies = [
  "quote",
  "syn 1.0.109",
 ]
-
-[[package]]
-name = "traits"
-version = "0.1.0"
 
 [[package]]
 name = "trybuild"
