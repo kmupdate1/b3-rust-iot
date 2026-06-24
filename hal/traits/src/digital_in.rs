@@ -1,3 +1,7 @@
+use core::result::Result;
+use crate::level::Level;
+
 pub trait DigitalIn {
-    fn get_level(&self) -> bool;
+    type Error;
+    fn get_level(&self) -> Result<Level, Self::Error>;
 }
