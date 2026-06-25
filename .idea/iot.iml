@@ -20,6 +20,7 @@
       <sourceFolder url="file://$MODULE_DIR$/drivers/thermistor/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/drivers/thermistor/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/examples/adc/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/examples/analog/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/examples/gpio/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/examples/led/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/examples/wf/src" isTestSource="false" />

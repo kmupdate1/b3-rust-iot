@@ -16,20 +16,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "adc"
-version = "0.1.0"
-dependencies = [
- "cortex-m-rt",
- "defmt 1.1.0",
- "defmt-rtt",
- "embassy-executor",
- "embassy-rp",
- "embassy-time",
- "hal-traits",
- "panic-probe",
-]
-
-[[package]]
 name = "aho-corasick"
 version = "1.1.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -45,6 +31,20 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ee4508988c62edf04abd8d92897fca0c2995d907ce1dfeaf369dac3716a40685"
 dependencies = [
  "as-slice",
+]
+
+[[package]]
+name = "analog"
+version = "0.1.0"
+dependencies = [
+ "cortex-m-rt",
+ "defmt 1.1.0",
+ "defmt-rtt",
+ "embassy-executor",
+ "embassy-rp",
+ "embassy-time",
+ "hal-traits",
+ "panic-probe",
 ]
 
 [[package]]
@@ -2065,7 +2065,6 @@ dependencies = [
 name = "rp235x"
 version = "0.1.0"
 dependencies = [
- "embassy-executor",
  "embassy-rp",
  "hal-traits",
 ]

@@ -1,6 +1,8 @@
 #![no_std]
 #![no_main]
 
+mod board;
+
 use defmt::*;
 use embassy_executor::Spawner;
 use embassy_rp::gpio;
