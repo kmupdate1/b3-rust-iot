@@ -16,3 +16,4 @@ embassy-time = { workspace = true }
 panic-probe = { workspace = true }
 
 hal-traits = { path = "../../hal/traits" }
+hal-rp235x = { path = "../../hal/rp235x" }

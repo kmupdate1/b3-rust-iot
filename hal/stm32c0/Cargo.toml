@@ -1,5 +1,5 @@
 [package]
-name = "stm32c0"
+name = "hal-stm32c0"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true

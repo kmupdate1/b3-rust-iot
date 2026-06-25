@@ -1,5 +1,5 @@
 [package]
-name = "rp235x"
+name = "hal-rp235x"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
