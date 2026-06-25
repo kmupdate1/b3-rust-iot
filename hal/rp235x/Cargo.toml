@@ -8,3 +8,4 @@ license.workspace = true
 [dependencies]
 hal-traits = { path = "../traits" }
 embassy-rp = { workspace = true }
+embassy-executor = { workspace = true }

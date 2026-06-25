@@ -19,6 +19,7 @@
       <sourceFolder url="file://$MODULE_DIR$/drivers/photo-register/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/drivers/thermistor/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/drivers/thermistor/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/examples/adc/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/examples/gpio/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/examples/led/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/examples/wf/src" isTestSource="false" />
@@ -69,6 +70,7 @@
       <sourceFolder url="file://$MODULE_DIR$/vendor/embassy/embassy-usb/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/embassy/embassy-executor/target" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/embassy/embassy-rp/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

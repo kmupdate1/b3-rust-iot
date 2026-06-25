@@ -16,6 +16,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "adc"
+version = "0.1.0"
+dependencies = [
+ "cortex-m-rt",
+ "defmt 1.1.0",
+ "defmt-rtt",
+ "embassy-executor",
+ "embassy-rp",
+ "embassy-time",
+ "hal-traits",
+ "panic-probe",
+]
+
+[[package]]
 name = "aho-corasick"
 version = "1.1.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1175,6 +1189,7 @@ dependencies = [
  "embassy-executor",
  "embassy-rp",
  "embassy-time",
+ "hal-traits",
  "panic-probe",
 ]
 
@@ -2050,6 +2065,7 @@ dependencies = [
 name = "rp235x"
 version = "0.1.0"
 dependencies = [
+ "embassy-executor",
  "embassy-rp",
  "hal-traits",
 ]
@@ -2458,6 +2474,9 @@ dependencies = [
 [[package]]
 name = "thermistor"
 version = "0.1.0"
+dependencies = [
+ "hal-traits",
+]
 
 [[package]]
 name = "thiserror"
