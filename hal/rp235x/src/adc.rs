@@ -1,3 +1,5 @@
+use embassy_rp::adc::Config;
+use embassy_rp::bind_interrupts;
 use hal_traits::analog_in::AnalogIn;
 
 pub struct AdcPin<'a, T: embassy_rp::adc::AdcChannel> {
@@ -27,7 +29,9 @@ pub struct AdcDriver {
 }
 
 impl AdcDriver {
-    pub fn new(adc: embassy_rp::adc::Adc<'static, embassy_rp::adc::Async>) -> Self {
+    pub fn init(p: embassy_rp::Peripherals) -> Self {
+        bind_interrupts!(struct Irqs { ADC_IRQ_FIFO => embassy_rp::adc::InterruptHandler; });
+        let adc = embassy_rp::adc::Adc::new(p.ADC, Irqs, Config::default());
         Self { adc }
     }
 

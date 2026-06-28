@@ -6,6 +6,7 @@ pub mod digital_in;
 pub mod digital_out;
 pub mod pwm;
 pub mod level;
+pub mod board;
 
 pub use network_device::NetworkDevice;
 pub use spi::Spi;
