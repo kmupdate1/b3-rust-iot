@@ -1,0 +1,12 @@
+pub mod adc;
+pub mod i2c;
+pub mod pwm;
+pub mod spi;
+pub mod timer;
+pub mod uart;
+pub mod wifi;
+pub mod pins;
+pub mod gpio;
+pub mod watchdog;
+pub mod clocks;
+pub mod resets;

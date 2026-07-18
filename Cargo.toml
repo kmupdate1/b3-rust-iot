@@ -1,22 +1,24 @@
 [workspace]
 resolver = "3"
 members = [
-    "domain",
     "platform/interface",
     "platform/rp235x",
-    "platform/stm32c0",
+    #"platform/stm32c0",
+
     "drivers/sensors/moisture",
-    "drivers/sensors/photo-register",
-    "drivers/sensors/thermistor",
-    "drivers/network/tcpip",
-    "drivers/network/thread",
-    "drivers/network/wifi",
+    #"drivers/sensors/photo-register",
+    #"drivers/sensors/thermistor",
+    #"drivers/network/tcpip",
+    #"drivers/network/thread",
+    #"drivers/network/wifi",
+
+    "domain",
     "app",
 
-    "examples/analog",
-    "examples/gpio",
-    "examples/led",
-    "examples/wf",
+    #"examples/analog",
+    #"examples/gpio",
+    #"examples/led",
+    #"examples/wf",
 ]
 
 [workspace.package]
@@ -77,6 +79,8 @@ static_cell = "2.1"
 portable-atomic = { version = "1.5", features = ["critical-section"] }
 log = "0.4"
 embedded-sdmmc = "0.7.0"
+
+#b3-rust-stdlib = { git = "https://github.com/kmupdate1/b3-rust-stdlib.git", rev = "" }
 
 [profile.release]
 # Enable generation of debug symbols even on release builds

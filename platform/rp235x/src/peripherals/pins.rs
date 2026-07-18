@@ -1,0 +1,27 @@
+pub struct Pin0;
+pub struct Pin1;
+pub struct Pin2;
+pub struct Pin3;
+pub struct Pin4;
+pub struct Pin5;
+pub struct Pin6;
+pub struct Pin7;
+pub struct Pin8;
+pub struct Pin9;
+pub struct Pin10;
+pub struct Pin11;
+pub struct Pin12;
+pub struct Pin13;
+pub struct Pin14;
+pub struct Pin15;
+pub struct Pin16;
+pub struct Pin17;
+pub struct Pin18;
+pub struct Pin19;
+pub struct Pin20;
+pub struct Pin21;
+pub struct Pin22;
+
+pub struct Pin26;
+pub struct Pin27;
+pub struct Pin28;

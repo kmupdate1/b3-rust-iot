@@ -1,4 +1,4 @@
-pub trait DisplayOut {
+pub trait DigitalOutput {
     fn set_high(&mut self);
     fn set_low(&mut self);
 }

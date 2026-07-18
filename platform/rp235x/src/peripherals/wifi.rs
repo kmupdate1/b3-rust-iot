@@ -1,4 +1,5 @@
-use hal_traits::network_device::NetworkDevice;
+/*
+use interface::network_device::NetworkDevice;
 
 pub struct WifiDriver {
 
@@ -22,3 +23,4 @@ impl NetworkDevice for WifiDriver {
         Ok(0)
     }
 }
+*/

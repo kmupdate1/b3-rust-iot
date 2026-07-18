@@ -1,3 +1,4 @@
+/*
 use crate::analog_in::AnalogIn;
 
 pub trait Board {
@@ -5,3 +6,4 @@ pub trait Board {
     
     fn analog_input(&mut self) -> &mut Self::AnalogInput;
 }
+*/
