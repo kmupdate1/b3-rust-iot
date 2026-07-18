@@ -6,4 +6,4 @@ authors.workspace = true
 license.workspace = true
 
 [dependencies]
-hal-traits = { path = "../../hal/traits" }
+interface = { path = "../../../platform/interface" }

@@ -7,18 +7,18 @@
       <sourceFolder url="file://$MODULE_DIR$/core/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/domain/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/domain/tests" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/drivers/moisture/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/drivers/moisture/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/drivers/network/tcpip/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/drivers/network/tcpip/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/drivers/network/thread/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/drivers/network/thread/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/drivers/network/wifi/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/drivers/network/wifi/tests" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/drivers/photo-register/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/drivers/photo-register/tests" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/drivers/thermistor/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/drivers/thermistor/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/drivers/sensors/moisture/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/drivers/sensors/moisture/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/drivers/sensors/photo-register/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/drivers/sensors/photo-register/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/drivers/sensors/thermistor/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/drivers/sensors/thermistor/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/examples/adc/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/examples/analog/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/examples/gpio/src" isTestSource="false" />
@@ -26,20 +26,20 @@
       <sourceFolder url="file://$MODULE_DIR$/examples/wf/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/examples/wifi/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/firmware/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/hal/rp235x/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/hal/rp235x/tests" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/hal/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/hal/stm32c0/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/hal/stm32c0/tests" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/hal/tests" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/hal/traits/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/hal/traits/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/libs/core/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/libs/core/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/libs/driver/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/libs/driver/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/libs/firmware/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/libs/firmware/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/platform/interface/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/platform/interface/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/platform/rp235x/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/platform/rp235x/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/platform/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/platform/stm32c0/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/platform/stm32c0/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/platform/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/sensors/led/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/sensors/moisture/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/sensors/moisture/tests" isTestSource="true" />

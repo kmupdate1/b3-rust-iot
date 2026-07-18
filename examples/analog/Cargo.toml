@@ -15,5 +15,5 @@ embassy-rp = { workspace = true, features = ["rp235xa"] }
 embassy-time = { workspace = true }
 panic-probe = { workspace = true }
 
-hal-traits = { path = "../../hal/traits" }
-hal-rp235x = { path = "../../hal/rp235x" }
+interface = { path = "../../platform/interface" }
+rp235x = { path = "../../platform/rp235x" }

@@ -1,6 +1,10 @@
 [package]
-name = "hal-traits"
+name = "rp235x"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
 license.workspace = true
+
+[dependencies]
+interface = { path = "../interface" }
+embassy-rp = { workspace = true }

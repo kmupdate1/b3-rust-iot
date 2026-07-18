@@ -2,12 +2,12 @@
 resolver = "3"
 members = [
     "domain",
-    "hal/traits",
-    "hal/rp235x",
-    "hal/stm32c0",
-    "drivers/moisture",
-    "drivers/photo-register",
-    "drivers/thermistor",
+    "platform/interface",
+    "platform/rp235x",
+    "platform/stm32c0",
+    "drivers/sensors/moisture",
+    "drivers/sensors/photo-register",
+    "drivers/sensors/thermistor",
     "drivers/network/tcpip",
     "drivers/network/thread",
     "drivers/network/wifi",
