@@ -15,4 +15,4 @@ embassy-rp = { workspace = true, features = ["rp235xa"] }
 embassy-time = { workspace = true }
 panic-probe = { workspace = true }
 
-interface = { path = "../../platform/interface" }
+interface = { path = "../../interface" }

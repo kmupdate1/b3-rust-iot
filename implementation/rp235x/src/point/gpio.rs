@@ -1,0 +1,27 @@
+pub struct Gpio0;
+pub struct Gpio1;
+pub struct Gpio2;
+pub struct Gpio3;
+pub struct Gpio4;
+pub struct Gpio5;
+pub struct Gpio6;
+pub struct Gpio7;
+pub struct Gpio8;
+pub struct Gpio9;
+pub struct Gpio10;
+pub struct Gpio11;
+pub struct Gpio12;
+pub struct Gpio13;
+pub struct Gpio14;
+pub struct Gpio15;
+pub struct Gpio16;
+pub struct Gpio17;
+pub struct Gpio18;
+pub struct Gpio19;
+pub struct Gpio20;
+pub struct Gpio21;
+pub struct Gpio22;
+
+pub struct Gpio26;
+pub struct Gpio27;
+pub struct Gpio28;

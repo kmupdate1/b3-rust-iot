@@ -1,9 +1,0 @@
-[package]
-name = "thermistor"
-version.workspace = true
-edition.workspace = true
-authors.workspace = true
-license.workspace = true
-
-[dependencies]
-interface = { path = "../../../platform/interface" }

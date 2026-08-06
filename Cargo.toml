@@ -1,22 +1,22 @@
 [workspace]
 resolver = "3"
 members = [
-    "platform/interface",
-    "platform/rp235x",
-    #"platform/stm32c0",
+    #"capability",
+    "function",
+    #"point",
+    "implementation/rp235x",
+    #"implementation/stm32c0",
+    "implementation/embassy-net",
 
-    "drivers/sensors/moisture",
-    #"drivers/sensors/photo-register",
-    #"drivers/sensors/thermistor",
-    #"drivers/network/tcpip",
-    #"drivers/network/thread",
-    #"drivers/network/wifi",
-
-    "domain",
-    "app",
+    #"driver/sensor/moisture",
+    #"driver/sensor/photo-register",
+    #"driver/sensor/thermistor",
+    #"driver/network/tcpip",
+    #"driver/network/thread",
+    #"driver/network/wifi",
 
     #"examples/analog",
-    #"examples/gpio",
+    #"examples/communication",
     #"examples/led",
     #"examples/wf",
 ]
