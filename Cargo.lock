@@ -1451,6 +1451,7 @@ dependencies = [
  "embassy-net 0.9.1",
  "embassy-rp",
  "function",
+ "heapless",
  "static_cell",
 ]
 

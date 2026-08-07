@@ -9,10 +9,11 @@ license.workspace = true
 function = { path = "../../function" }
 
 embassy-rp = { workspace = true }
-embassy-net = { workspace = true }
+embassy-net = { workspace = true, features = ["dhcpv4-hostname"] }
 embassy-executor = { workspace = true }
 
 cyw43 = { workspace = true }
 cyw43-pio = { workspace = true }
 
 static_cell = { workspace = true }
+heapless = { workspace = true }
