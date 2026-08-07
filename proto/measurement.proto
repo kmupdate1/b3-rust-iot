@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package org.b3.bem.edge.v1;
+
+import "observation.proto";
+
+message Measurement {
+  repeated Observation observations = 1;
+}

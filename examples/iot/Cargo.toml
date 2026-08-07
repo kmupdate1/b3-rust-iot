@@ -1,5 +1,5 @@
 [package]
-name = "analog"
+name = "iot"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
@@ -15,5 +15,8 @@ embassy-rp = { workspace = true, features = ["rp235xa"] }
 embassy-time = { workspace = true }
 panic-probe = { workspace = true }
 
-interface = { path = "../../interface" }
+pump = { path = "../../driver/actuator/pump" }
+function = { path = "../../function" }
+field-edge = { path = "../../device/field-edge" }
 rp235x = { path = "../../implementation/rp235x" }
+log = "0.4.33"

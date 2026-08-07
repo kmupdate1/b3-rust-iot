@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package b3.bem.edge.v0;
+
+// EdgeがAgentへ通知する「1つの観測値」
+//
+// resource / unit / direction といったB3上の意味は送らない。
+// それらはAgent側にビルドされた設備・圃場定義が決定する。
+message Measurement {
+  // どのEquipmentから来た観測か
+  uint32 equipment_id = 1;
+
+  // Equipment内のどの観測点か。
+  //
+  // 例:
+  // Pump1
+  //   channel 1 -> electric / OUTFLOW / kWh
+  //   channel 2 -> water    / OUTFLOW / L
+  //
+  // Battery2
+  //   channel 1 -> electric / INFLOW  / Wh
+  //   channel 2 -> electric / OUTFLOW / Wh
+  uint32 channel_id = 2;
+
+  // 観測された生の数値。
+  // 単位と意味はchannelによってAgent側で決定する。
+  double value = 3;
+}

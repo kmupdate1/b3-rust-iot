@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package org.b3.bem.edge.v1;
+
+message Observation {
+  uint32 equipment_id = 1;
+  uint32 channel_id = 2;
+  double value = 3;
+}

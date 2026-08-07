@@ -1,6 +1,6 @@
 #![no_std]
 
-// pub mod analog;
+pub mod analog;
 pub mod communication;
 pub mod digital;
 pub mod network;
@@ -9,6 +9,7 @@ pub mod network;
 
 // pub mod network_device;
 
+pub use analog::*;
 pub use communication::*;
 pub use digital::*;
 pub use network::*;

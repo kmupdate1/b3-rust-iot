@@ -1,0 +1,11 @@
+[package]
+name = "field-edge"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+function = { path = "../../function" }
+pump = { path = "../../driver/actuator/pump" }
+rp235x = { path = "../../implementation/rp235x" }

@@ -1,0 +1,10 @@
+[package]
+name = "pump"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+function = { path = "../../../function" }
+driver-core = { path = "../../driver-core" }

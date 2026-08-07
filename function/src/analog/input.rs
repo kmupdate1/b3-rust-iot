@@ -1,6 +1,10 @@
-use core::result::Result;
+pub trait AnalogChannel {}
 
-pub trait AnalogInput {
+pub trait AnalogReader<C>
+where
+    C: AnalogChannel,
+{
     type Error;
-    fn read(&mut self) -> Result<u16, Self::Error>;
+
+    async fn read(&mut self, channel: &mut C) -> Result<u16, Self::Error>;
 }

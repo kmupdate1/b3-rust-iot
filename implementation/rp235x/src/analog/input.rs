@@ -1,27 +1,61 @@
-use crate::error::AnalogInputError;
-use crate::gpio::adc::Adc;
-use crate::peripherals::pins::{Pin26, Pin27, Pin28};
-use core::result::Result;
-use function::analog::analog_input::AnalogInput;
+use embassy_rp::adc::{Adc, Async, Channel, Config, Error, InterruptHandler};
+use embassy_rp::gpio::Pull;
+use embassy_rp::peripherals::ADC;
+use embassy_rp::{bind_interrupts, Peri};
 
-pub struct AnalogInputPin<P> {
-    pin: P,
-    adc: Adc,
+use function::{AnalogChannel, AnalogReader};
+use crate::{Pin26, Pin27, Pin28};
+
+bind_interrupts!(struct Irqs {
+    ADC_IRQ_FIFO => InterruptHandler;
+});
+
+pub struct Rp235xAdc<'d> {
+    inner: Adc<'d, Async>,
 }
 
-impl<P> AnalogInput for AnalogInputPin<P> {
-    type Error = AnalogInputError;
-    fn read(&mut self) -> Result<u16, Self::Error> { todo!() }
+impl<'d> Rp235xAdc<'d> {
+    pub fn new(adc: Peri<'d, ADC>) -> Self {
+        Self {
+            inner: Adc::new(adc, Irqs, Config::default()),
+        }
+    }
 }
 
-macro_rules! impl_analog_input_pin {
-    ($($p:ty),* $(,)?) => {$(
-        impl AnalogInputPin<$p> {
-            pub fn attach(adc: Adc, pin: $p) -> Self {
-                Self { pin, adc }
+macro_rules! impl_define_adc {
+    ($($analog:ident => $pin:ident),* $(,)?) => {$(
+        pub struct $analog<'d> {
+            channel: Channel<'d>
+        }
+
+        impl<'d> $analog<'d> {
+            pub fn new(pin: $pin<'d>) -> Self {
+                Self {
+                    channel: Channel::new_pin(
+                        pin.into_inner(),
+                        Pull::None,
+                    ),
+                }
+            }
+        }
+
+        impl AnalogChannel for $analog<'_> {}
+
+        impl AnalogReader<$analog<'_>> for Rp235xAdc<'_> {
+            type Error = Error;
+
+            async fn read(
+                &mut self,
+                channel: &mut $analog<'_>,
+            ) -> Result<u16, Self::Error> {
+                self.inner.read(&mut channel.channel).await
             }
         }
     )*};
 }
 
-impl_analog_input_pin!(Pin26, Pin27, Pin28);
+impl_define_adc!(
+    AdcPin26 => Pin26,
+    AdcPin27 => Pin27,
+    AdcPin28 => Pin28,
+);

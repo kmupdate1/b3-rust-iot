@@ -8,14 +8,18 @@ members = [
     #"implementation/stm32c0",
     "implementation/embassy-net",
 
+    "driver/driver-core",
     #"driver/sensor/moisture",
     #"driver/sensor/photo-register",
     #"driver/sensor/thermistor",
+    "driver/actuator/pump",
     #"driver/network/tcpip",
     #"driver/network/thread",
     #"driver/network/wifi",
 
-    #"examples/analog",
+    "device/field-edge",
+
+    "examples/iot",
     #"examples/communication",
     #"examples/led",
     #"examples/wf",
