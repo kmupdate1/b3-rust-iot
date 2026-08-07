@@ -7,4 +7,12 @@ license.workspace = true
 
 [dependencies]
 function = { path = "../../function" }
+
 embassy-rp = { workspace = true }
+embassy-net = { workspace = true }
+embassy-executor = { workspace = true }
+
+cyw43 = { workspace = true }
+cyw43-pio = { workspace = true }
+
+static_cell = { workspace = true }
