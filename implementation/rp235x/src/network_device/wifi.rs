@@ -8,8 +8,8 @@ use embassy_rp::gpio::{Level, Output};
 use embassy_rp::peripherals::{DMA_CH0, DMA_CH1, PIO0};
 use embassy_rp::pio::{InterruptHandler, Pio};
 use static_cell::StaticCell;
-use function::{NetworkDevice, Wifi};
-use crate::Pico2wWifiResources;
+use function::{NetworkDevice, Wifi, WifiConfig};
+use crate::{Pico2wWifiResources, Rp235xTcp};
 
 bind_interrupts!(struct Irqs {
     PIO0_IRQ_0 => InterruptHandler<PIO0>;
@@ -46,9 +46,10 @@ pub struct Rp235xWifi {
 }
 
 impl Rp235xWifi {
-    pub async fn new(
+    pub async fn builder(
         resources: Pico2wWifiResources<'static>,
         spawner: Spawner,
+        config: WifiConfig<'_>,
     ) -> Self {
         let mut rng = RoscRng;
         let seed = rng.next_u64();
@@ -88,7 +89,7 @@ impl Rp235xWifi {
 
         let mut dhcp_config = embassy_net::DhcpConfig::default();
         dhcp_config.hostname = Some(
-            heapless::String::try_from("b3c-field-edge-0001").unwrap()
+            heapless::String::try_from(config.hostname).unwrap()
         );
 
         let config = embassy_net::Config::dhcpv4(dhcp_config);
@@ -103,6 +104,12 @@ impl Rp235xWifi {
         spawner.spawn(net_task(net_runner).unwrap());
 
         Self { control, stack }
+    }
+}
+
+impl Rp235xWifi {
+    pub fn tcp(&self) -> Rp235xTcp {
+        Rp235xTcp::new(self.stack)
     }
 }
 

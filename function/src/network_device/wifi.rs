@@ -7,3 +7,9 @@ pub trait Wifi: NetworkDevice {
         password: &str,
     ) -> Result<(), Self::Error>;
 }
+
+pub struct WifiConfig<'a> {
+    pub hostname: &'a str,
+    pub ssid: &'a str,
+    pub password: &'a str,
+}

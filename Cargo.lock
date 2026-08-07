@@ -1450,6 +1450,7 @@ dependencies = [
  "embassy-executor",
  "embassy-net 0.9.1",
  "embassy-rp",
+ "embedded-io-async 0.7.0",
  "function",
  "heapless",
  "static_cell",

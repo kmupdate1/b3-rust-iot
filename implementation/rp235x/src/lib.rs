@@ -2,6 +2,7 @@
 
 pub mod analog;
 pub mod board;
+pub mod network;
 pub mod network_device;
 pub mod peripherals;
 // pub mod error;
@@ -12,6 +13,7 @@ pub mod digital;
 
 pub use analog::*;
 pub use board::*;
+pub use network::*;
 pub use network_device::*;
 pub use peripherals::*;
 pub use communication::*;
