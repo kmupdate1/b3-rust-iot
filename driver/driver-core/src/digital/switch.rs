@@ -1,4 +1,4 @@
-use function::DigitalOutput;
+use capability::DigitalOutput;
 
 pub struct Switch<O>
 where

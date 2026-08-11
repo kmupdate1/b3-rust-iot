@@ -1,5 +1,5 @@
 use embassy_rp::i2c::{Async, Error, Instance, I2c as EmbassyI2c};
-use function::communication::I2c;
+use capability::communication::I2c;
 
 pub struct Rp235xI2c<'d, T: Instance> {
     i2c: EmbassyI2c<'d, T, Async>,

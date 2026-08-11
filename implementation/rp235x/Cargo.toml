@@ -6,15 +6,17 @@ authors.workspace = true
 license.workspace = true
 
 [dependencies]
-function = { path = "../../function" }
+capability = { path = "../../capability" }
 
 embassy-rp = { workspace = true }
 embassy-net = { workspace = true, features = ["dhcpv4-hostname"] }
 embassy-executor = { workspace = true }
+embassy-sync = { workspace = true }
 
-cyw43 = { workspace = true }
+cyw43 = { workspace = true, features = ["defmt", "firmware-logs", "bluetooth"] }
 cyw43-pio = { workspace = true }
 
 static_cell = { workspace = true }
 heapless = { workspace = true }
 embedded-io-async = { workspace = true }
+bt-hci = "0.9.0"

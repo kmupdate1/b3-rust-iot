@@ -1,4 +1,4 @@
-use function::IntoDigitalOutput;
+use capability::IntoDigitalOutput;
 use pump::PumpPower;
 use rp235x::{Pin0, Pin1};
 use crate::create_pump_power;

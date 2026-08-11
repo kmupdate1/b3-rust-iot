@@ -71,10 +71,13 @@
       <sourceFolder url="file://$MODULE_DIR$/vendor/embassy/embassy-usb-driver/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/vendor/embassy/embassy-usb-logger/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/vendor/embassy/embassy-usb/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/capability/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/capability/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/device/field-edge/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/driver/actuator/pump/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/driver/core/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/driver/driver-core/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/driver/mux/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/examples/iot/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/implementation/embassy-net/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/implementation/embassy-net/tests" isTestSource="true" />

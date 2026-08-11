@@ -1,7 +1,6 @@
 use embassy_rp::gpio::{Level, Output, Pin};
 use embassy_rp::Peri;
-use function::digital::DigitalOutput;
-use function::IntoDigitalOutput;
+use capability::{DigitalOutput, IntoDigitalOutput};
 use crate::*;
 
 pub struct DigitalOutputPin<'d> {

@@ -6,6 +6,6 @@ authors.workspace = true
 license.workspace = true
 
 [dependencies]
-function = { path = "../../function" }
+capability = { path = "../../capability" }
 pump = { path = "../../driver/actuator/pump" }
 rp235x = { path = "../../implementation/rp235x" }

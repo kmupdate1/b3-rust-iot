@@ -1,5 +1,5 @@
 use driver_core::Switch;
-use function::DigitalOutput;
+use capability::DigitalOutput;
 
 pub struct PumpPower<O>
 where

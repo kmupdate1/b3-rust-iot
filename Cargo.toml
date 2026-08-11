@@ -1,13 +1,13 @@
 [workspace]
 resolver = "3"
 members = [
-    #"capability",
-    "function",
+    "capability",
     #"point",
     "implementation/rp235x",
     #"implementation/stm32c0",
     "implementation/embassy-net",
 
+    "driver/mux",
     "driver/driver-core",
     #"driver/sensor/moisture",
     #"driver/sensor/photo-register",
@@ -83,6 +83,7 @@ static_cell = "2.1"
 portable-atomic = { version = "1.5", features = ["critical-section"] }
 log = "0.4"
 embedded-sdmmc = "0.7.0"
+embedded-alloc = "0.7.0"
 
 #b3-rust-stdlib = { git = "https://github.com/kmupdate1/b3-rust-stdlib.git", rev = "" }
 

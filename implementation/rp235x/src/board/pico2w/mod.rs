@@ -1,3 +1,3 @@
-pub mod wifi_resources;
+pub mod cyw43_resources;
 
-pub use wifi_resources::*;
+pub use cyw43_resources::*;

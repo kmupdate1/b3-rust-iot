@@ -6,6 +6,6 @@ authors.workspace = true
 license.workspace = true
 
 [dependencies]
-function = { path = "../../function" }
+capability = { path = "../../capability" }
 embassy-net = { workspace = true }
 embedded-io-async = { workspace = true }

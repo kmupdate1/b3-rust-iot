@@ -1,9 +1,8 @@
 [package]
-name = "driver-core"
+name = "capability"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
 license.workspace = true
 
 [dependencies]
-capability = { path = "../../capability" }

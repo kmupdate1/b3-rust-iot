@@ -1,4 +1,4 @@
-use function::IntoDigitalOutput;
+use capability::IntoDigitalOutput;
 use pump::PumpPower;
 
 pub fn create_pump_power<P>(pin: P) -> PumpPower<P::Output>

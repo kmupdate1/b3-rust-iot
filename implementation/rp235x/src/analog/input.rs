@@ -3,7 +3,7 @@ use embassy_rp::gpio::Pull;
 use embassy_rp::peripherals::ADC;
 use embassy_rp::{bind_interrupts, Peri};
 
-use function::{AnalogChannel, AnalogReader};
+use capability::{AnalogChannel, AnalogReader};
 use crate::{Pin26, Pin27, Pin28};
 
 bind_interrupts!(struct Irqs {

@@ -8,11 +8,30 @@ use defmt_rtt as _;
 use panic_probe as _;
 use embassy_executor::Spawner;
 use embassy_time::{Duration, Timer};
-use field_edge::{composePin0, composePin1};
 use log::warn;
-use function::{AnalogReader, Wifi, WifiConfig};
+use field_edge::{composePin0, composePin1};
+use capability::{AnalogReader, IntoDigitalOutput, Wifi, WifiConfig};
 use rp235x::analog::{AdcPin26, Rp235xAdc};
-use rp235x::{Pico2wWifiResources, Pin0, Pin1, Pin26, Rp235xWifi};
+use rp235x::{Pico2wCyw43Resources, Pin0, Pin1, Pin10, Pin11, Pin12, Pin26, Rp235xBluetooth, Rp235xCyw43, Rp235xWifi};
+use embedded_alloc::LlffHeap;
+use mux::Mux;
+
+#[global_allocator]
+static HEAP: LlffHeap = LlffHeap::empty();
+
+const HEAP_SIZE: usize = 16 * 1024;
+
+#[unsafe(link_section = ".uninit")]
+static mut HEAP_MEM: [u8; HEAP_SIZE] = [0; HEAP_SIZE];
+
+fn init_heap() {
+    unsafe {
+        HEAP.init(
+            core::ptr::addr_of_mut!(HEAP_MEM) as *mut u8 as usize,
+            HEAP_SIZE,
+        );
+    }
+}
 
 #[embassy_executor::main]
 async fn main(spawner: Spawner) {
@@ -27,7 +46,7 @@ async fn main(spawner: Spawner) {
     Timer::after(Duration::from_secs(1)).await;
     blue.stop();
 
-    let wifi_resources = Pico2wWifiResources::new(
+    let wifi_resources = Pico2wCyw43Resources::new(
         peripherals.PIN_23,
         peripherals.PIN_25,
         peripherals.PIN_24,
@@ -44,7 +63,11 @@ async fn main(spawner: Spawner) {
         ssid: "Buffalo-2G-8F20",
         password: "hrtsedgmndi6c",
     };
-    let mut wifi = Rp235xWifi::builder(wifi_resources, spawner, wifi_config).await;
+
+    let network = Rp235xCyw43::builder(wifi_resources, spawner).await;
+    let mut wifi = Rp235xWifi::new(&network);
+    let mut bluetooth = Rp235xBluetooth::new(&network);
+
     red.stop();
 
     match wifi
@@ -68,6 +91,14 @@ async fn main(spawner: Spawner) {
             }
         },
     }
+
+    let mut mux = Mux::new(
+        Pin10::new(peripherals.PIN_10).into_digital_output(),
+        Pin11::new(peripherals.PIN_11).into_digital_output(),
+        Pin12::new(peripherals.PIN_12).into_digital_output(),
+    );
+    mux.select(6);
+    mux.select(2);
 
     let mut adc = Rp235xAdc::new(peripherals.ADC);
     let mut channel = AdcPin26::new(Pin26::new(peripherals.PIN_26));
@@ -113,15 +144,17 @@ async fn main(spawner: Spawner) {
             match adc.read(&mut channel).await {
                 Ok(raw) => {
                     // 一瞬だけ点灯
-                    blue.start();
+                    let blue_blinking = async {
+                        blue.start();
+                        Timer::after(Duration::from_millis(10)).await;
+                        blue.stop();
+                    };
 
                     let mut buffer = [0u8; 32];
                     let len = encode_observation(1, 1, raw as f64, &mut buffer);
 
                     match connection.send(&buffer[..len]).await {
-                        Ok(_) => {
-                            blue.stop();
-                        },
+                        Ok(_) => { blue_blinking.await; },
                         Err(_) => {
                             blue.stop();
                             for _ in 0..3 {
@@ -141,11 +174,11 @@ async fn main(spawner: Spawner) {
                 Err(_) => {
                     warn!("ADC read failed");
                     red.start();
+
+                    Timer::after(Duration::from_secs(1)).await;
+                    red.stop();
                 },
             }
-
-            Timer::after(Duration::from_secs(1)).await;
-            red.stop();
         }
     }
 }

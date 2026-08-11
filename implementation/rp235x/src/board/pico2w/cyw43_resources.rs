@@ -1,7 +1,7 @@
 use embassy_rp::peripherals::{DMA_CH0, DMA_CH1, PIN_23, PIN_24, PIN_25, PIN_29, PIO0};
 use embassy_rp::Peri;
 
-pub struct Pico2wWifiResources<'d> {
+pub struct Pico2wCyw43Resources<'d> {
     pub(crate) pwr: Peri<'d, PIN_23>,
     pub(crate) cs: Peri<'d, PIN_25>,
     pub(crate) dio: Peri<'d, PIN_24>,
@@ -11,7 +11,7 @@ pub struct Pico2wWifiResources<'d> {
     pub(crate) dma1: Peri<'d, DMA_CH1>,
 }
 
-impl<'d> Pico2wWifiResources<'d> {
+impl<'d> Pico2wCyw43Resources<'d> {
     pub fn new(
         pwr: Peri<'d, PIN_23>,
         cs: Peri<'d, PIN_25>,

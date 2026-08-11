@@ -14,9 +14,11 @@ embassy-executor = { workspace = true }
 embassy-rp = { workspace = true, features = ["rp235xa"] }
 embassy-time = { workspace = true }
 panic-probe = { workspace = true }
+embedded-alloc = { workspace = true }
 
 pump = { path = "../../driver/actuator/pump" }
-function = { path = "../../function" }
+mux = { path = "../../driver/mux" }
+capability = { path = "../../capability" }
 field-edge = { path = "../../device/field-edge" }
 rp235x = { path = "../../implementation/rp235x" }
 log = "0.4.33"

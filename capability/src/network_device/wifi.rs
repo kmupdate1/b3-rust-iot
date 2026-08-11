@@ -8,6 +8,9 @@ pub trait Wifi: NetworkDevice {
     ) -> Result<(), Self::Error>;
 }
 
+#[derive(Debug)]
+pub enum WifiError {}
+
 pub struct WifiConfig<'a> {
     pub hostname: &'a str,
     pub ssid: &'a str,
