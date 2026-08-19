@@ -59,7 +59,7 @@ async fn main(spawner: Spawner) {
     red.start();
     Timer::after(Duration::from_secs(1)).await;
     let wifi_config = WifiConfig {
-        hostname: "b3c-field-edge-0001",
+        hostname: "b3m-offgridlab-e1",
         ssid: "Buffalo-2G-8F20",
         password: "hrtsedgmndi6c",
     };
@@ -110,7 +110,7 @@ async fn main(spawner: Spawner) {
     loop {
         let mut connection = match tcp
             .connect(
-                "192.168.11.3", 23065,
+                "192.168.11.101", 23065,
                 &mut rx_buffer, &mut tx_buffer,
             )
             .await
