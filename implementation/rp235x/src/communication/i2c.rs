@@ -1,4 +1,6 @@
-use embassy_rp::i2c::{Async, Error, Instance, I2c as EmbassyI2c};
+use embassy_rp::i2c::{Async, Error, Instance, I2c as EmbassyI2c, InterruptHandler, SclPin, SdaPin, Config};
+use embassy_rp::interrupt::typelevel::Binding;
+use embassy_rp::Peri;
 use capability::communication::I2c;
 
 pub struct Rp235xI2c<'d, T: Instance> {
@@ -6,7 +8,17 @@ pub struct Rp235xI2c<'d, T: Instance> {
 }
 
 impl<'d, T: Instance> Rp235xI2c<'d, T> {
-    pub fn new(i2c: EmbassyI2c<'d, T, Async>) -> Self {
+    pub fn new(
+        i2c: Peri<'d, T>,
+        scl: Peri<'d, impl SclPin<T>>,
+        sda: Peri<'d, impl SdaPin<T>>,
+        irq: impl Binding<T::Interrupt, InterruptHandler<T>>,
+    ) -> Self {
+        let i2c = EmbassyI2c::new_async(
+            i2c, scl, sda, irq,
+            Config::default(),
+        );
+
         Self { i2c }
     }
 }
@@ -22,7 +34,7 @@ impl<T: Instance> I2c for Rp235xI2c<'_, T> {
 
     async fn read(&mut self, address: u8, data: &mut [u8]) -> Result<(), Self::Error> {
         self.i2c
-            .write_async(address, data.iter().copied())
+            .read_async(address, data)
             .await
     }
 
