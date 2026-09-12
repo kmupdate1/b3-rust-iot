@@ -1969,6 +1969,7 @@ dependencies = [
  "embassy-sync 0.8.0 (git+https://github.com/embassy-rs/embassy?rev=d945e092eb757955bc37a55c2c6e297df51bfcde)",
  "embedded-io-async 0.7.0",
  "heapless 0.9.3",
+ "reqwless",
  "static_cell",
 ]
 
@@ -2443,7 +2444,6 @@ dependencies = [
  "mux",
  "panic-probe",
  "pump",
- "reqwless",
  "rp235x",
 ]
 

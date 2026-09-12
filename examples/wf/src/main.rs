@@ -6,7 +6,7 @@ use defmt::*;
 use defmt_rtt as _;
 use panic_probe as _;
 use embassy_executor::Spawner;
-use capability::{Wifi};
+use capability::{Http, Wifi};
 use rp235x::{Pico2wCyw43Resources, Rp235xCyw43, Rp235xWifi};
 use embedded_alloc::LlffHeap;
 
@@ -35,15 +35,17 @@ async fn main(spawner: Spawner) {
         .await
         .unwrap();
 
-    // compile error: ここの実装をやる。
     let mut http = network.http();
 
     let mut buffer = [0u8; 4096];
 
-    match http.get(
-        "https://github.com/kumpdate1/b3-rust-iot/releases/lates/download/manifest.json",
-        &mut buffer,
-    ) {
+    match http
+        .get(
+            "https://github.com/kmupdate1/b3-rust-iot/releases/latest/download/manifest.json",
+            &mut buffer,
+        )
+        .await
+    {
         Ok(len) => {
             info!(
                 "Download complete!: {}",

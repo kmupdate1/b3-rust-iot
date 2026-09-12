@@ -1,4 +1,4 @@
-use crate::Pico2wCyw43Resources;
+use crate::{Pico2wCyw43Resources, Rp235xHttp};
 use cyw43::bluetooth::BtDriver;
 use cyw43::{aligned_bytes, Control};
 use cyw43_pio::{PioSpi, DEFAULT_CLOCK_DIVIDER};
@@ -109,5 +109,9 @@ impl Rp235xCyw43 {
             stack,
             bluetooth: Mutex::new(bluetooth),
         }
+    }
+    
+    pub fn http(&self) -> Rp235xHttp {
+        Rp235xHttp::new(self.stack)
     }
 }
