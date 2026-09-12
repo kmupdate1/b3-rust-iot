@@ -1,17 +1,17 @@
-use crate::Ota;
+use crate::{Ota, OtaStatus};
 
 pub async fn check<O>(
     ota: &mut O,
     current_v: &str,
-) -> Result<bool, O::Error>
+) -> Result<OtaStatus, O::Error>
 where
     O: Ota,
 {
     if !ota.available(current_v).await? {
-        return Ok(false);
+        return Ok(OtaStatus::UpToDate);
     }
 
     ota.update().await?;
 
-    Ok(true)
+    Ok(OtaStatus::ReadyToReboot)
 }
