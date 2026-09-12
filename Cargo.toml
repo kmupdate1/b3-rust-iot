@@ -24,7 +24,7 @@ members = [
     "examples/iot",
     #"examples/communication",
     #"examples/led",
-    #"examples/wf",
+    "examples/wf",
 ]
 
 [workspace.package]
