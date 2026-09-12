@@ -25,6 +25,8 @@ members = [
     #"examples/communication",
     #"examples/led",
     "examples/wf",
+
+    "debugger",
 ]
 
 [workspace.package]

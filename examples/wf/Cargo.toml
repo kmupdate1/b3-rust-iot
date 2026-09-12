@@ -20,6 +20,7 @@ embassy-net = { workspace = true }
 pump = { path = "../../driver/actuator/pump" }
 mux = { path = "../../driver/mux" }
 capability = { path = "../../capability" }
+debugger = { path = "../../debugger" }
 field-edge = { path = "../../device/field-edge" }
 rp235x = { path = "../../implementation/rp235x" }
 log = "0.4.33"

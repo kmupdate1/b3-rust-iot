@@ -490,6 +490,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "80a4af69c60438a1a82af89d362f4729fd38db7b73f305a237636fad31ceb2bf"
 
 [[package]]
+name = "debugger"
+version = "0.1.0"
+
+[[package]]
 name = "defmt"
 version = "0.3.100"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1963,6 +1967,7 @@ dependencies = [
  "capability",
  "cyw43",
  "cyw43-pio",
+ "debugger",
  "embassy-executor",
  "embassy-net 0.9.1",
  "embassy-rp",
@@ -2432,6 +2437,7 @@ version = "0.1.0"
 dependencies = [
  "capability",
  "cortex-m-rt",
+ "debugger",
  "defmt 1.1.1",
  "defmt-rtt",
  "embassy-executor",

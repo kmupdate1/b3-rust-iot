@@ -4,6 +4,7 @@ set -euo pipefail
 
 TARGET="thumbv8m.main-none-eabihf"
 BIN="iot"
+BIN="wf"
 ELF="target/${TARGET}/release/${BIN}"
 UF2="${BIN}.uf2"
 MOUNT_POINT="/tmp/rp2350"

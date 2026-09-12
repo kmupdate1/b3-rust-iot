@@ -7,6 +7,7 @@ license.workspace = true
 
 [dependencies]
 capability = { path = "../../capability" }
+debugger = { path = "../../debugger" }
 
 embassy-rp = { workspace = true }
 embassy-net = { workspace = true, features = ["dhcpv4-hostname"] }
