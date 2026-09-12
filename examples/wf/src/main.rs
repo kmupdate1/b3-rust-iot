@@ -43,7 +43,7 @@ async fn main(spawner: Spawner) {
         .await
         .unwrap();
 
-    debugger.led.green(true);
+    debugger.indicator.green(true);
 
     let mut http = network.http();
 
@@ -63,15 +63,15 @@ async fn main(spawner: Spawner) {
                 core::str::from_utf8(&buffer[..len]).unwrap_or("invalid utf-8"),
             );
 
-            debugger.led.red(false);
-            debugger.led.blue(true);
+            debugger.indicator.red(false);
+            debugger.indicator.blue(true);
         }
 
         Err(_) => {
             error!("manifest download failed");
 
-            debugger.led.red(true);
-            debugger.led.blue(false);
+            debugger.indicator.red(true);
+            debugger.indicator.blue(false);
         }
     }
 }
