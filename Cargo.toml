@@ -19,6 +19,7 @@ members = [
 
     "device/field-edge",
 
+    "examples/gpio",
     "examples/iot",
     #"examples/communication",
     #"examples/led",

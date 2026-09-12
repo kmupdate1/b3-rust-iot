@@ -934,6 +934,26 @@ dependencies = [
 ]
 
 [[package]]
+name = "gpio"
+version = "0.1.0"
+dependencies = [
+ "capability",
+ "cortex-m-rt",
+ "defmt 1.1.1",
+ "defmt-rtt",
+ "embassy-executor",
+ "embassy-rp",
+ "embassy-time",
+ "embedded-alloc",
+ "field-edge",
+ "log",
+ "mux",
+ "panic-probe",
+ "pump",
+ "rp235x",
+]
+
+[[package]]
 name = "half"
 version = "2.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
