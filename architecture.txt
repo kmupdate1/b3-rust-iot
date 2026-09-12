@@ -1,0 +1,22 @@
+# Target Architecture
+
+runtime/
+  runtime-core/     # 起動・ライフサイクル全体の制御
+  provisioning/     # 初回セットアップ、Wi-Fi/BLE等のプロビジョニング
+  ota/              # ファームウェア更新
+  registration/     # デバイスのシステム登録・認証
+
+hal/
+  capability/       # ハードウェア非依存の能力定義
+  rp235x/           # RP235x向け能力実装
+  esp32/            # ESP32向け能力実装
+
+driver/
+  pump/             # ポンプ等のアクチュエータドライバ
+  sensor-a/         # 各種センサドライバ
+  sensor-b/
+
+domain/
+  field-edge/       # Field Edgeとしてのユースケース・製品ロジック
+  irrigation/       # 灌水ドメイン
+  energy/           # 電力・エネルギードメイン

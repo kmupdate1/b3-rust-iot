@@ -1,6 +1,7 @@
 [workspace]
 resolver = "3"
 members = [
+    "runtime/runtime-core",
     "capability",
     #"point",
     "implementation/rp235x",
