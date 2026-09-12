@@ -64,7 +64,6 @@ async fn main(spawner: Spawner) {
             );
 
             debugger.led.red(false);
-            debugger.led.green(false);
             debugger.led.blue(true);
         }
 
@@ -72,7 +71,6 @@ async fn main(spawner: Spawner) {
             error!("manifest download failed");
 
             debugger.led.red(true);
-            debugger.led.green(false);
             debugger.led.blue(false);
         }
     }
