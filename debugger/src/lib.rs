@@ -1,5 +1,5 @@
 #![no_std]
 
-pub mod led;
+pub mod indicator;
 
-pub use led::*;
+pub use indicator::*;

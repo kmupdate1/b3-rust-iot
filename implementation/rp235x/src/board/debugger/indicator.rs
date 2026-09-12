@@ -1,15 +1,15 @@
-use debugger::led::Led;
+use debugger::indicator::Indicator;
 use embassy_rp::gpio::{Level, Output};
 use embassy_rp::Peri;
 use embassy_rp::peripherals::{PIN_0, PIN_1, PIN_2};
 
-pub struct Rp235xLedDebugger<'d> {
+pub struct Rp235xIndicatorDebugger<'d> {
     red: Output<'d>,
     green: Output<'d>,
     blue: Output<'d>,
 }
 
-impl<'d> Rp235xLedDebugger<'d> {
+impl<'d> Rp235xIndicatorDebugger<'d> {
     pub fn new(
         pin0: Peri<'d, PIN_0>,
         pin1: Peri<'d, PIN_1>,
@@ -23,7 +23,7 @@ impl<'d> Rp235xLedDebugger<'d> {
     }
 }
 
-impl Led for Rp235xLedDebugger<'_> {
+impl Indicator for Rp235xIndicatorDebugger<'_> {
     fn red(&mut self, is_on: bool) {
         self.red.set_level(Level::from(is_on));
     }

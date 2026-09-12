@@ -9,7 +9,7 @@ use embassy_executor::Spawner;
 use capability::{Http, Wifi};
 use rp235x::{Pico2wCyw43Resources, Rp235xCyw43, Rp235xWifi};
 use embedded_alloc::LlffHeap;
-use debugger::Led;
+use debugger::Indicator;
 use rp235x::debugger::{Rp235xDebugger};
 
 #[global_allocator]
