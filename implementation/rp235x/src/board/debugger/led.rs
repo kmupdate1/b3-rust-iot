@@ -3,13 +3,13 @@ use embassy_rp::gpio::{Level, Output};
 use embassy_rp::Peri;
 use embassy_rp::peripherals::{PIN_0, PIN_1, PIN_2};
 
-pub struct Rp235xLed<'d> {
+pub struct Rp235xLedDebugger<'d> {
     red: Output<'d>,
     green: Output<'d>,
     blue: Output<'d>,
 }
 
-impl<'d> Rp235xLed<'d> {
+impl<'d> Rp235xLedDebugger<'d> {
     pub fn new(
         pin0: Peri<'d, PIN_0>,
         pin1: Peri<'d, PIN_1>,
@@ -23,7 +23,7 @@ impl<'d> Rp235xLed<'d> {
     }
 }
 
-impl Led for Rp235xLed<'_> {
+impl Led for Rp235xLedDebugger<'_> {
     fn red(&mut self, is_on: bool) {
         self.red.set_level(Level::from(is_on));
     }

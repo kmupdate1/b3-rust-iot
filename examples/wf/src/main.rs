@@ -10,7 +10,7 @@ use capability::{Http, Wifi};
 use rp235x::{Pico2wCyw43Resources, Rp235xCyw43, Rp235xWifi};
 use embedded_alloc::LlffHeap;
 use debugger::Led;
-use rp235x::debugger::{Rp235xDebugger, Rp235xLed};
+use rp235x::debugger::{Rp235xDebugger};
 
 #[global_allocator]
 static HEAP: LlffHeap = LlffHeap::empty();
@@ -29,13 +29,11 @@ async fn main(spawner: Spawner) {
         p.DMA_CH1,
     );
 
-    let led = Rp235xLed::new(
+    let mut debugger = Rp235xDebugger::new(
         p.PIN_0,
         p.PIN_1,
         p.PIN_2,
     );
-
-    let mut debugger = Rp235xDebugger::new(led);
 
     let network = Rp235xCyw43::builder(wifi_resources, spawner).await;
     let mut wifi = Rp235xWifi::new(&network);
