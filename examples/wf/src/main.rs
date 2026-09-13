@@ -2,15 +2,27 @@
 #![no_main]
 
 use core::default::Default;
-use defmt::*;
 use defmt_rtt as _;
 use panic_probe as _;
 use embassy_executor::Spawner;
+use embassy_rp::bind_interrupts;
+use embassy_rp::peripherals::USB;
+use embassy_rp::usb::{Driver, InterruptHandler};
+use embassy_time::Timer;
 use capability::{Http, Wifi};
 use rp235x::{Pico2wCyw43Resources, Rp235xCyw43, Rp235xWifi};
 use embedded_alloc::LlffHeap;
 use debugger::Indicator;
 use rp235x::debugger::{Rp235xDebugger};
+
+bind_interrupts!(struct UsbIrqs {
+    USBCTRL_IRQ => InterruptHandler<USB>;
+});
+
+#[embassy_executor::task]
+async fn usb_logger_task(driver: Driver<'static, USB>) {
+    embassy_usb_logger::run!(1024, log::LevelFilter::Info, driver);
+}
 
 #[global_allocator]
 static HEAP: LlffHeap = LlffHeap::empty();
@@ -18,6 +30,13 @@ static HEAP: LlffHeap = LlffHeap::empty();
 #[embassy_executor::main]
 async fn main(spawner: Spawner) {
     let p = embassy_rp::init(Default::default());
+
+    let usb_driver = Driver::new(p.USB, UsbIrqs);
+    spawner.spawn(usb_logger_task(usb_driver).unwrap());
+
+    // Give macOS time to enumerate the USB serial device before startup logs.
+    Timer::after_secs(2).await;
+    log::info!("wf example started");
 
     let wifi_resources = Pico2wCyw43Resources::new(
         p.PIN_23,
@@ -38,16 +57,21 @@ async fn main(spawner: Spawner) {
     let network = Rp235xCyw43::builder(wifi_resources, spawner).await;
     let mut wifi = Rp235xWifi::new(&network);
 
+    log::info!("connecting to Wi-Fi");
+
     wifi
         .connect("Buffalo-2G-8F20", "hrtsedgmndi6c")
         .await
         .unwrap();
 
+    log::info!("Wi-Fi connected");
     debugger.indicator.green(true);
 
     let mut http = network.http();
 
     let mut buffer = [0u8; 4096];
+
+    log::info!("downloading manifest.json");
 
     let res = http
         .get(
@@ -58,8 +82,9 @@ async fn main(spawner: Spawner) {
 
     match res {
         Ok(len) => {
-            info!(
-                "Download complete!: {}",
+            log::info!(
+                "manifest.json downloaded ({} bytes): {}",
+                len,
                 core::str::from_utf8(&buffer[..len]).unwrap_or("invalid utf-8"),
             );
 
@@ -68,7 +93,7 @@ async fn main(spawner: Spawner) {
         }
 
         Err(_) => {
-            error!("manifest download failed");
+            log::error!("manifest.json download failed");
 
             debugger.indicator.red(true);
             debugger.indicator.blue(false);
