@@ -1,0 +1,21 @@
+[package]
+name = "b3-rp235x-bootloader"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+publish = false
+build = "build.rs"
+
+[dependencies]
+embassy-boot-rp = { workspace = true }
+embassy-rp = { workspace = true, features = ["rp235xa"] }
+embassy-sync = { workspace = true }
+embassy-time = { workspace = true }
+cortex-m = { workspace = true, features = ["critical-section-single-core"] }
+cortex-m-rt = { workspace = true }
+embedded-storage = { workspace = true }
+
+[[bin]]
+name = "b3-rp235x-bootloader"
+path = "src/main.rs"

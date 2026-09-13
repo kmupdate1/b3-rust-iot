@@ -1,6 +1,7 @@
 [workspace]
 resolver = "3"
 members = [
+    "bootloader/rp235x",
     "runtime/runtime-core",
     "capability",
     #"point",
@@ -47,6 +48,7 @@ embassy-net = { git = "https://github.com/embassy-rs/embassy", rev = "d945e092eb
 embassy-net-wiznet = { git = "https://github.com/embassy-rs/embassy", rev = "d945e092eb757955bc37a55c2c6e297df51bfcde", features = ["defmt"] }
 embassy-futures = { git = "https://github.com/embassy-rs/embassy", rev = "d945e092eb757955bc37a55c2c6e297df51bfcde" }
 embassy-usb-logger = { git = "https://github.com/embassy-rs/embassy", rev = "d945e092eb757955bc37a55c2c6e297df51bfcde" }
+embassy-boot-rp = { git = "https://github.com/embassy-rs/embassy", rev = "d945e092eb757955bc37a55c2c6e297df51bfcde" }
 cyw43 = { git = "https://github.com/embassy-rs/embassy", rev = "d945e092eb757955bc37a55c2c6e297df51bfcde", features = ["defmt", "firmware-logs"] }
 cyw43-pio = { git = "https://github.com/embassy-rs/embassy", rev = "d945e092eb757955bc37a55c2c6e297df51bfcde", features = ["defmt"] }
 
@@ -88,6 +90,7 @@ portable-atomic = { version = "1.5", features = ["critical-section"] }
 log = "0.4"
 embedded-sdmmc = "0.7.0"
 embedded-alloc = "0.7.0"
+sha2 = { version = "0.10", default-features = false }
 
 #b3-rust-stdlib = { git = "https://github.com/kmupdate1/b3-rust-stdlib.git", rev = "" }
 

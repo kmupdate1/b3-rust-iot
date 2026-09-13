@@ -8,12 +8,21 @@ use embassy_executor::Spawner;
 use embassy_rp::bind_interrupts;
 use embassy_rp::peripherals::USB;
 use embassy_rp::usb::{Driver, InterruptHandler};
+use embassy_rp::watchdog::Watchdog;
 use embassy_time::Timer;
-use capability::{Http, Ipv4NetworkDevice, Ipv6NetworkDevice, Wifi};
+use capability::{Ipv4NetworkDevice, Wifi};
 use rp235x::{Pico2wCyw43Resources, Rp235xCyw43, Rp235xWifi};
 use embedded_alloc::LlffHeap;
 use debugger::Indicator;
 use rp235x::debugger::{Rp235xDebugger};
+use runtime_core::OtaStatus;
+
+const CURRENT_VERSION: &str = match option_env!("B3_FIRMWARE_VERSION") {
+    Some(version) => version,
+    None => env!("CARGO_PKG_VERSION"),
+};
+const UPDATE_MANIFEST_URL: &str =
+    "https://github.com/kmupdate1/b3-rust-iot/releases/latest/download/update-manifest.json";
 
 bind_interrupts!(struct UsbIrqs {
     USBCTRL_IRQ => InterruptHandler<USB>;
@@ -30,6 +39,9 @@ static HEAP: LlffHeap = LlffHeap::empty();
 #[embassy_executor::main]
 async fn main(spawner: Spawner) {
     let p = embassy_rp::init(Default::default());
+    // A tentative image inherits the bootloader watchdog. Keep it running
+    // until the board and network stack have initialized successfully.
+    let mut watchdog = Watchdog::new(p.WATCHDOG);
 
     let usb_driver = Driver::new(p.USB, UsbIrqs);
     spawner.spawn(usb_logger_task(usb_driver).unwrap());
@@ -55,6 +67,13 @@ async fn main(spawner: Spawner) {
     );
 
     let network = Rp235xCyw43::builder(wifi_resources, spawner).await;
+    let mut ota = network.ota(p.FLASH, UPDATE_MANIFEST_URL);
+    if let Err(error) = ota.confirm_boot() {
+        log::error!("ota: failed to confirm current firmware: {:?}", error);
+        debugger.indicator.red(true);
+        return;
+    }
+    watchdog.stop();
     let mut wifi = Rp235xWifi::new(&network);
 
     log::info!("connecting to Wi-Fi");
@@ -75,46 +94,24 @@ async fn main(spawner: Spawner) {
         .await
         .unwrap();
 
-    /*
-    let ipv6 = wifi
-        .ipv6_addr()
-        .unwrap();
-    */
-
     log::info!("Wi-Fi connected");
     log::info!("  - Ipv4: {:?}", ipv4);
-    // log::info!("  - Ipv6: {:?}", ipv6);
-
     debugger.indicator.green(true);
 
-    let mut http = network.http();
-
-    let mut buffer = [0u8; 16 * 1024];
-
-    log::info!("downloading manifest sheet");
-
-    let res = http
-        .get(
-            "https://github.com/kmupdate1/b3-rust-iot/releases/latest/download/update-manifest.json",
-            &mut buffer,
-        )
-        .await;
-
-    match res {
-        Ok(len) => {
-            log::info!(
-                "manifest.json downloaded ({} bytes): {}",
-                len,
-                core::str::from_utf8(&buffer[..len]).unwrap_or("invalid utf-8"),
-            );
-
-            debugger.indicator.red(false);
+    log::info!("ota: checking for update from {}", CURRENT_VERSION);
+    match runtime_core::check(&mut ota, CURRENT_VERSION).await {
+        Ok(OtaStatus::UpToDate) => {
+            log::info!("ota: firmware is up to date");
             debugger.indicator.blue(true);
         }
-
-        Err(_) => {
-            log::error!("manifest.json download failed");
-
+        Ok(OtaStatus::ReadyToReboot) => {
+            log::info!("ota: update verified; rebooting");
+            debugger.indicator.blue(true);
+            Timer::after_secs(1).await;
+            cortex_m::peripheral::SCB::sys_reset();
+        }
+        Err(error) => {
+            log::error!("ota: update failed: {:?}", error);
             debugger.indicator.red(true);
             debugger.indicator.blue(false);
         }

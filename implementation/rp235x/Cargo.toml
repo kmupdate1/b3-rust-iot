@@ -8,12 +8,14 @@ license.workspace = true
 [dependencies]
 capability = { path = "../../capability" }
 debugger = { path = "../../debugger" }
+runtime-core = { path = "../../runtime/runtime-core" }
 
 embassy-rp = { workspace = true }
 embassy-net = { workspace = true, features = ["dhcpv4-hostname", "proto-ipv6", "slaac"] }
 embassy-executor = { workspace = true }
 embassy-sync = { workspace = true }
 embassy-time = { workspace = true }
+embassy-boot-rp = { workspace = true }
 
 cyw43 = { workspace = true, features = ["defmt", "firmware-logs", "bluetooth"] }
 cyw43-pio = { workspace = true }
@@ -22,6 +24,10 @@ static_cell = { workspace = true }
 heapless = { workspace = true }
 log = { workspace = true }
 embedded-io-async = { workspace = true }
+embedded-storage = { workspace = true }
+serde = { workspace = true }
+serde-json-core = { workspace = true }
+sha2 = { workspace = true }
 bt-hci = "0.9.0"
 
 reqwless = {

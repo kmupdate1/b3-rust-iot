@@ -1,4 +1,4 @@
-use crate::{Pico2wCyw43Resources, Rp235xHttp};
+use crate::{Pico2wCyw43Resources, Rp235xHttp, Rp235xOta};
 use cyw43::bluetooth::BtDriver;
 use cyw43::{aligned_bytes, Control};
 use cyw43_pio::{PioSpi, DEFAULT_CLOCK_DIVIDER};
@@ -6,9 +6,9 @@ use embassy_executor::Spawner;
 use embassy_net::{DhcpConfig, Stack, StackResources};
 use embassy_rp::clocks::RoscRng;
 use embassy_rp::gpio::{Level, Output};
-use embassy_rp::peripherals::{DMA_CH0, DMA_CH1, PIO0};
+use embassy_rp::peripherals::{DMA_CH0, DMA_CH1, FLASH, PIO0};
 use embassy_rp::pio::{InterruptHandler, Pio};
-use embassy_rp::{bind_interrupts, dma};
+use embassy_rp::{bind_interrupts, dma, Peri};
 use embassy_sync::blocking_mutex::raw::ThreadModeRawMutex;
 use embassy_sync::mutex::Mutex;
 use static_cell::StaticCell;
@@ -125,5 +125,13 @@ impl Rp235xCyw43 {
     
     pub fn http(&self) -> Rp235xHttp {
         Rp235xHttp::new(self.stack)
+    }
+
+    pub fn ota(
+        &self,
+        flash: Peri<'static, FLASH>,
+        manifest_url: &'static str,
+    ) -> Rp235xOta<'static> {
+        Rp235xOta::new(self.stack, flash, manifest_url)
     }
 }

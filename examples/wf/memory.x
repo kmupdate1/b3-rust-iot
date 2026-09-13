@@ -1,10 +1,9 @@
 MEMORY {
-    /*
-     * The RP2350 has either external or internal flash.
-     *
-     * 2 MiB is a safe default here, although a Pico 2 has 4 MiB.
-     */
-    FLASH : ORIGIN = 0x10000000, LENGTH = 2048K
+    FLASH_ZERO       : ORIGIN = 0x10000000, LENGTH = 0
+    BOOTLOADER       : ORIGIN = 0x10000000, LENGTH = 128K
+    BOOTLOADER_STATE : ORIGIN = 0x10020000, LENGTH = 4K
+    FLASH            : ORIGIN = 0x10021000, LENGTH = 1980K
+    DFU              : ORIGIN = ORIGIN(FLASH) + LENGTH(FLASH), LENGTH = 1984K
     /*
      * RAM consists of 8 banks, SRAM0-SRAM7, with a striped mapping.
      * This is usually good for performance, as it distributes load on
@@ -73,3 +72,8 @@ SECTIONS {
 
 PROVIDE(start_to_end = __end_block_addr - __start_block_addr);
 PROVIDE(end_to_start = __start_block_addr - __end_block_addr);
+
+__bootloader_state_start = ORIGIN(BOOTLOADER_STATE) - ORIGIN(FLASH_ZERO);
+__bootloader_state_end = ORIGIN(BOOTLOADER_STATE) + LENGTH(BOOTLOADER_STATE) - ORIGIN(FLASH_ZERO);
+__bootloader_dfu_start = ORIGIN(DFU) - ORIGIN(FLASH_ZERO);
+__bootloader_dfu_end = ORIGIN(DFU) + LENGTH(DFU) - ORIGIN(FLASH_ZERO);
