@@ -53,6 +53,8 @@ impl Rp235xCyw43 {
         resources: Pico2wCyw43Resources<'static>,
         spawner: Spawner,
     ) -> Self {
+        log::info!("cyw43: builder started");
+
         let mut rng = RoscRng;
         let seed = rng.next_u64();
 
@@ -64,6 +66,7 @@ impl Rp235xCyw43 {
         let pwr = Output::new(resources.pwr, Level::Low);
         let cs = Output::new(resources.cs, Level::High);
 
+        log::info!("cyw43: configuring PIO and DMA");
         let mut pio = Pio::new(resources.pio, Irqs);
 
         let spi = PioSpi::new(
@@ -80,16 +83,22 @@ impl Rp235xCyw43 {
 
         let state = STATE.init(cyw43::State::new());
 
+        log::info!("cyw43: loading Wi-Fi and Bluetooth firmware");
         let (net_device, bluetooth, mut control, runner) =
             cyw43::new_with_bluetooth(state, pwr, spi, fw, btfw, nvram).await;
+        log::info!("cyw43: firmware initialized");
 
         spawner.spawn(cyw43_task(runner).unwrap());
+        log::info!("cyw43: runner spawned");
 
+        log::info!("cyw43: initializing CLM");
         control.init(clm).await;
+        log::info!("cyw43: CLM initialized");
 
         control
             .set_power_management(cyw43::PowerManagementMode::PowerSave)
             .await;
+        log::info!("cyw43: power management configured");
 
         let config = embassy_net::Config::dhcpv4(
             DhcpConfig::default()
@@ -103,6 +112,7 @@ impl Rp235xCyw43 {
         );
 
         spawner.spawn(net_task(net_runner).unwrap());
+        log::info!("cyw43: network stack ready");
 
         Self {
             control: Mutex::new(control),

@@ -19,6 +19,7 @@ cyw43-pio = { workspace = true }
 
 static_cell = { workspace = true }
 heapless = { workspace = true }
+log = { workspace = true }
 embedded-io-async = { workspace = true }
 bt-hci = "0.9.0"
 
