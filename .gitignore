@@ -2,3 +2,4 @@ target/
 
 *.uf2
 firmware.bin
+update-manifest.json
