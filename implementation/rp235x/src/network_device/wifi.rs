@@ -1,7 +1,7 @@
 use core::net::{Ipv4Addr, Ipv6Addr};
 use crate::{Rp235xCyw43, Rp235xTcp, Rp235xUdp};
 use cyw43::JoinOptions;
-use capability::{IpNetworkDevice, NetworkDevice, Wifi};
+use capability::{Ipv4NetworkDevice, Ipv6NetworkDevice, NetworkDevice, Wifi};
 
 pub struct Rp235xWifi<'a> {
     network: &'a Rp235xCyw43,
@@ -27,17 +27,27 @@ impl NetworkDevice for Rp235xWifi<'_> {
     type Error = cyw43::JoinError;
 }
 
-impl IpNetworkDevice for Rp235xWifi<'_> {
+impl Ipv4NetworkDevice for Rp235xWifi<'_> {
     fn ipv4_addr(&self) -> Option<Ipv4Addr> {
         let addr = self.network.stack.config_v4()?.address.address();
 
         Some(Ipv4Addr::from(addr.octets()))
     }
 
+    async fn wait_ipv4(&self) -> Result<Ipv4Addr, Self::Error> {
+        todo!()
+    }
+}
+
+impl Ipv6NetworkDevice for Rp235xWifi<'_> {
     fn ipv6_addr(&self) -> Option<Ipv6Addr> {
         let addr = self.network.stack.config_v6()?.address.address();
 
         Some(Ipv6Addr::from(addr))
+    }
+    
+    async fn wait_ipv6(&self) -> Result<Ipv6Addr, Self::Error> {
+        todo!()
     }
 }
 

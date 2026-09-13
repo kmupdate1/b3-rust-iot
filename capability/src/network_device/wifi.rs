@@ -1,6 +1,6 @@
-use crate::IpNetworkDevice;
+use crate::NetworkDevice;
 
-pub trait Wifi: IpNetworkDevice {
+pub trait Wifi: NetworkDevice {
     async fn connect(
         &mut self,
         ssid: &str,
