@@ -10,7 +10,7 @@ use embassy_executor::Spawner;
 use embassy_time::{Duration, Timer};
 use log::warn;
 use field_edge::{composePin0, composePin1};
-use capability::{AnalogReader, IntoDigitalOutput, Wifi, WifiConfig};
+use capability::{AnalogReader, IntoDigitalOutput, Wifi, WifiCredentials};
 use rp235x::analog::{AdcPin26, Rp235xAdc};
 use rp235x::{Pico2wCyw43Resources, Pin0, Pin1, Pin10, Pin11, Pin12, Pin26, Rp235xBluetooth, Rp235xCyw43, Rp235xWifi};
 use embedded_alloc::LlffHeap;
@@ -58,11 +58,6 @@ async fn main(spawner: Spawner) {
 
     red.start();
     Timer::after(Duration::from_secs(1)).await;
-    let wifi_config = WifiConfig {
-        hostname: "b3m-offgridlab-e1",
-        ssid: "Buffalo-2G-8F20",
-        password: "hrtsedgmndi6c",
-    };
 
     let network = Rp235xCyw43::builder(wifi_resources, spawner).await;
     let mut wifi = Rp235xWifi::new(&network);

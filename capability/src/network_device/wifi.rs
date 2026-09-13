@@ -1,18 +1,19 @@
-use crate::NetworkDevice;
+use crate::IpNetworkDevice;
 
-pub trait Wifi: NetworkDevice {
+pub trait Wifi: IpNetworkDevice {
     async fn connect(
         &mut self,
         ssid: &str,
         password: &str,
     ) -> Result<(), Self::Error>;
+
+    async fn disconnect(&mut self) -> Result<(), Self::Error>;
 }
 
 #[derive(Debug)]
 pub enum WifiError {}
 
-pub struct WifiConfig<'a> {
-    pub hostname: &'a str,
+pub struct WifiCredentials<'a> {
     pub ssid: &'a str,
     pub password: &'a str,
 }
