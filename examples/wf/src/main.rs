@@ -9,7 +9,7 @@ use embassy_rp::bind_interrupts;
 use embassy_rp::peripherals::USB;
 use embassy_rp::usb::{Driver, InterruptHandler};
 use embassy_time::Timer;
-use capability::{Http, Ipv4NetworkDevice, Wifi};
+use capability::{Http, Ipv4NetworkDevice, Ipv6NetworkDevice, Wifi};
 use rp235x::{Pico2wCyw43Resources, Rp235xCyw43, Rp235xWifi};
 use embedded_alloc::LlffHeap;
 use debugger::Indicator;
@@ -65,11 +65,24 @@ async fn main(spawner: Spawner) {
 
     if con.is_err() {
         log::error!("Wi-Fi connect failed");
+
+        debugger.indicator.red(true);
+        return;
     }
 
+    let ipv4 = wifi
+        .wait_ipv4_addr()
+        .await
+        .unwrap();
+
+    let ipv6 = wifi
+        .wait_ipv6_addr()
+        .await
+        .unwrap();
+
     log::info!("Wi-Fi connected");
-    log::info!("  - IpV4: {:?}", wifi.ipv4_addr());
-    // log::info!("  - IpV6: {:?}", wifi.ipv6_addr());
+    log::info!("  - IpV4: {:?}", ipv4);
+    log::info!("  - IpV6: {:?}", ipv6);
 
     debugger.indicator.green(true);
 

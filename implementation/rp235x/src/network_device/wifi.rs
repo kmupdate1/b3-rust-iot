@@ -78,7 +78,6 @@ impl Wifi for Rp235xWifi<'_> {
         drop(control);
 
         self.network.stack.wait_link_up().await;
-        self.network.stack.wait_config_up().await;
 
         Ok(())
     }
