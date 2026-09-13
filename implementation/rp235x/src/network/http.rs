@@ -47,25 +47,55 @@ impl Http for Rp235xHttp {
         let mut request = client
             .request(Method::GET, url)
             .await
-            .map_err(|_| ())?;
+            .map_err(|_| {
+                log::error!("http: request creation failed");
+                ()
+            })?;
 
         let response = request
             .send(buffer)
             .await
-            .map_err(|_| ())?;
+            .map_err(|_| {
+                log::error!("http: request send or response header read failed");
+                ()
+            })?;
+
+        log::info!("http: response status {}", response.status.0);
+
+        if response.status.is_redirection() {
+            for (name, value) in response.headers() {
+                if name.eq_ignore_ascii_case("location") {
+                    match core::str::from_utf8(value) {
+                        Ok(location) => log::info!("http: redirect location {}", location),
+                        Err(_) => log::error!("http: redirect location is not UTF-8"),
+                    }
+                }
+            }
+        }
+
+        if !response.status.is_successful() {
+            log::error!("http: non-success response status {}", response.status.0);
+            return Err(());
+        }
 
         let body = response
             .body()
             .read_to_end()
             .await
-            .map_err(|_| ())?;
+            .map_err(|_| {
+                log::error!("http: response body read failed");
+                ()
+            })?;
 
         let body_start = body.as_ptr() as usize;
         let body_len = body.len();
 
         let offset = body_start
             .checked_sub(buf_start)
-            .ok_or(())?;
+            .ok_or_else(|| {
+                log::error!("http: response body buffer is outside the supplied buffer");
+                ()
+            })?;
 
         if offset != 0 {
             buffer.copy_within(
