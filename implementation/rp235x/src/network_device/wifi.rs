@@ -36,6 +36,8 @@ impl Ipv4NetworkDevice for Rp235xWifi<'_> {
     }
 
     async fn wait_ipv4_addr(&self) -> Result<Ipv4Addr, Self::Error> {
+        self.network.stack.wait_config_up().await;
+
         loop {
             if let Some(addr) = self.ipv4_addr() {
                 return Ok(addr);

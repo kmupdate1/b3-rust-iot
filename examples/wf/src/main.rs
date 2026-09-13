@@ -75,12 +75,15 @@ async fn main(spawner: Spawner) {
         .await
         .unwrap();
 
+    /*
     let ipv6 = wifi
-        .ipv6_addr();
+        .ipv6_addr()
+        .unwrap();
+    */
 
     log::info!("Wi-Fi connected");
-    log::info!("  - IpV4: {:?}", ipv4);
-    log::info!("  - IpV6: {:?}", ipv6);
+    log::info!("  - Ipv4: {:?}", ipv4);
+    // log::info!("  - Ipv6: {:?}", ipv6);
 
     debugger.indicator.green(true);
 
