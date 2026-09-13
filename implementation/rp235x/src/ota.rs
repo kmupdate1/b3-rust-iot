@@ -241,25 +241,50 @@ mod ota_download {
                     let mut reader = response.body().reader();
                     let mut chunk = AlignedBuffer([0u8; 4096]);
                     let mut offset = 0usize;
+                    let mut next_progress = 64 * 1024;
+
                     loop {
-                        let read = reader.read(&mut chunk.0).await.map_err(|_| Rp235xOtaError::Http)?;
+                        let read = reader
+                            .read(&mut chunk.0)
+                            .await
+                            .map_err(|error| {
+                                log::error!(
+                                    "OTA: firmware body read failed at {} bytes: {:?}",
+                                    offset,
+                                    error,
+                                );
+                                Rp235xOtaError::Http
+                            })?;
+
                         if read == 0 { break; }
-                        updater.write_firmware(offset, &chunk.0[..read])
+
+                        updater
+                            .write_firmware(offset, &chunk.0[..read])
                             .map_err(|_| Rp235xOtaError::Flash)?;
+
                         offset += read;
-                        log::info!("ota: downloaded {} / {} bytes", offset, expected_size);
+
+                        if offset >= next_progress || offset == expected_size as usize {
+                            log::info!(
+                                "ota: downloaded {} / {} bytes",
+                                offset,
+                                expected_size,
+                            );
+
+                            next_progress += 64 * 1024;
+                        }
                     }
-                    return if offset == expected_size as usize {
-                        Ok(())
-                    } else {
-                        Err(Rp235xOtaError::FirmwareSizeMismatch)
-                    };
+
+                    return if offset == expected_size as usize { Ok(()) }
+                    else { Err(Rp235xOtaError::FirmwareSizeMismatch) };
                 }
 
                 if !response.status.is_redirection() || redirect_count == 3 {
                     return Err(Rp235xOtaError::Http);
                 }
+
                 let mut redirect = String::<2048>::new();
+
                 for (name, value) in response.headers() {
                     if name.eq_ignore_ascii_case("location") {
                         let value = core::str::from_utf8(value).map_err(|_| Rp235xOtaError::Http)?;

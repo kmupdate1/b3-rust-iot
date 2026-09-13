@@ -96,9 +96,9 @@ impl Rp235xCyw43 {
         log::info!("cyw43: CLM initialized");
 
         control
-            .set_power_management(cyw43::PowerManagementMode::PowerSave)
+            .set_power_management(cyw43::PowerManagementMode::Performance)
             .await;
-        log::info!("cyw43: power management configured");
+        log::info!("cyw43: performance mode power management configured");
 
         let config = embassy_net::Config::dhcpv4(
             DhcpConfig::default()
