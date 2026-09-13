@@ -76,9 +76,7 @@ async fn main(spawner: Spawner) {
         .unwrap();
 
     let ipv6 = wifi
-        .wait_ipv6_addr()
-        .await
-        .unwrap();
+        .ipv6_addr();
 
     log::info!("Wi-Fi connected");
     log::info!("  - IpV4: {:?}", ipv4);
