@@ -69,7 +69,7 @@ async fn main(spawner: Spawner) {
 
     let mut http = network.http();
 
-    let mut buffer = [0u8; 4096];
+    let mut buffer = [0u8; 16 * 1024];
 
     log::info!("downloading manifest.json");
 
