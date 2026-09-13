@@ -104,6 +104,19 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "be5eb007b7cacc6c660343e96f650fedf4b5a77512399eb952ca6642cf8d13f7"
 
 [[package]]
+name = "b3-rp235x-bootloader"
+version = "0.1.0"
+dependencies = [
+ "cortex-m",
+ "cortex-m-rt",
+ "embassy-boot-rp",
+ "embassy-rp",
+ "embassy-sync 0.8.0 (git+https://github.com/embassy-rs/embassy?rev=d945e092eb757955bc37a55c2c6e297df51bfcde)",
+ "embassy-time",
+ "embedded-storage",
+]
+
+[[package]]
 name = "bare-metal"
 version = "0.2.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -322,6 +335,7 @@ checksum = "8ec610d8f49840a5b376c69663b6369e71f4b34484b9b2eb29fb918d92516cb9"
 dependencies = [
  "bare-metal",
  "bitfield 0.13.2",
+ "critical-section",
  "embedded-hal 0.2.7",
  "volatile-register",
 ]
@@ -658,6 +672,36 @@ dependencies = [
  "sec1",
  "subtle",
  "zeroize",
+]
+
+[[package]]
+name = "embassy-boot"
+version = "0.7.0"
+source = "git+https://github.com/embassy-rs/embassy?rev=d945e092eb757955bc37a55c2c6e297df51bfcde#d945e092eb757955bc37a55c2c6e297df51bfcde"
+dependencies = [
+ "digest",
+ "document-features",
+ "embassy-embedded-hal",
+ "embassy-sync 0.8.0 (git+https://github.com/embassy-rs/embassy?rev=d945e092eb757955bc37a55c2c6e297df51bfcde)",
+ "embedded-storage",
+ "embedded-storage-async",
+ "signature",
+]
+
+[[package]]
+name = "embassy-boot-rp"
+version = "0.10.0"
+source = "git+https://github.com/embassy-rs/embassy?rev=d945e092eb757955bc37a55c2c6e297df51bfcde#d945e092eb757955bc37a55c2c6e297df51bfcde"
+dependencies = [
+ "cfg-if",
+ "cortex-m",
+ "cortex-m-rt",
+ "embassy-boot",
+ "embassy-rp",
+ "embassy-sync 0.8.0 (git+https://github.com/embassy-rs/embassy?rev=d945e092eb757955bc37a55c2c6e297df51bfcde)",
+ "embassy-time",
+ "embedded-storage",
+ "embedded-storage-async",
 ]
 
 [[package]]
@@ -1344,6 +1388,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0bfb9eb618601c89945a70e254898da93b13be0388091d42117462b265bb3fad"
 dependencies = [
  "hash32 0.3.1",
+ "serde",
  "stable_deref_trait",
 ]
 
@@ -2032,15 +2077,21 @@ dependencies = [
  "cyw43",
  "cyw43-pio",
  "debugger",
+ "embassy-boot-rp",
  "embassy-executor",
  "embassy-net 0.9.1",
  "embassy-rp",
  "embassy-sync 0.8.0 (git+https://github.com/embassy-rs/embassy?rev=d945e092eb757955bc37a55c2c6e297df51bfcde)",
  "embassy-time",
  "embedded-io-async 0.7.0",
+ "embedded-storage",
  "heapless 0.9.3",
  "log",
  "reqwless",
+ "runtime-core",
+ "serde",
+ "serde-json-core",
+ "sha2",
  "static_cell",
 ]
 
@@ -2074,6 +2125,12 @@ name = "rustversion"
 version = "1.0.23"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cf54715a573b99ac80df0bc206da022bcd442c974952c7b9720069370852e21f"
+
+[[package]]
+name = "ryu"
+version = "1.0.23"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9774ba4a74de5f7b1c1451ed6cd5285a32eddb5cccb8cc655a4e50009e06477f"
 
 [[package]]
 name = "same-file"
@@ -2149,6 +2206,18 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4148590afebada386688f18773da617792bf2ef03ffc1e4cbd2b1d45b023e0ba"
 dependencies = [
  "serde_core",
+ "serde_derive",
+]
+
+[[package]]
+name = "serde-json-core"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5b81787e655bd59cecadc91f7b6b8651330b2be6c33246039a65e5cd6f4e0828"
+dependencies = [
+ "heapless 0.8.0",
+ "ryu",
+ "serde",
 ]
 
 [[package]]
@@ -2585,6 +2654,7 @@ name = "wf"
 version = "0.1.0"
 dependencies = [
  "capability",
+ "cortex-m",
  "cortex-m-rt",
  "debugger",
  "defmt 1.1.1",
@@ -2601,6 +2671,7 @@ dependencies = [
  "panic-probe",
  "pump",
  "rp235x",
+ "runtime-core",
 ]
 
 [[package]]
