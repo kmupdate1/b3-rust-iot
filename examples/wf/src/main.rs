@@ -91,11 +91,11 @@ async fn main(spawner: Spawner) {
 
     let mut buffer = [0u8; 16 * 1024];
 
-    log::info!("downloading manifest.json");
+    log::info!("downloading manifest sheet");
 
     let res = http
         .get(
-            "https://github.com/kmupdate1/b3-rust-iot/releases/latest/download/manifest.json",
+            "https://github.com/kmupdate1/b3-rust-iot/releases/latest/download/update-manifest.json",
             &mut buffer,
         )
         .await;
