@@ -17,6 +17,7 @@ embassy-usb-logger = { workspace = true }
 panic-probe = { workspace = true }
 embedded-alloc = { workspace = true }
 embassy-net = { workspace = true }
+cortex-m = { workspace = true }
 
 pump = { path = "../../driver/actuator/pump" }
 mux = { path = "../../driver/mux" }
@@ -25,5 +26,5 @@ debugger = { path = "../../debugger" }
 field-edge = { path = "../../device/field-edge" }
 rp235x = { path = "../../implementation/rp235x" }
 runtime-core = { path = "../../runtime/runtime-core" }
+
 log = "0.4.33"
-cortex-m = "0.7.7"
