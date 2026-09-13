@@ -253,7 +253,7 @@ mod ota_download {
                                 .await
                                 .map_err(|error| {
                                     log::error!(
-                                        "ota: firmware request failed at {} (attempt {}): {:?}",
+                                        "updater: firmware request failed at {} (attempt {}): {:?}",
                                         segment_start,
                                         attempt,
                                         error,
@@ -266,7 +266,7 @@ mod ota_download {
                                 .await
                                 .map_err(|error| {
                                     log::error!(
-                                        "ota: firmware response failed at {} (attempt {}): {:?}",
+                                        "updater: firmware response failed at {} (attempt {}): {:?}",
                                         segment_start,
                                         attempt,
                                         error,
@@ -289,7 +289,7 @@ mod ota_download {
                                         .await
                                         .map_err(|error| {
                                             log::error!(
-                                                "ota: firmware body failed at {} (attempt {}): {:?}",
+                                                "updater: firmware body failed at {} (attempt {}): {:?}",
                                                 segment_start + received,
                                                 attempt,
                                                 error,
@@ -324,7 +324,7 @@ mod ota_download {
                                 || redirect_count == MAX_REDIRECTS
                             {
                                 log::error!(
-                                    "ota: unexpected firmware response status {}",
+                                    "updater: unexpected firmware response status {}",
                                     response.status.0,
                                 );
                                 return Err(Rp235xOtaError::Http);
@@ -364,7 +364,7 @@ mod ota_download {
                     Ok(received) => {
                         offset += received;
                         log::info!(
-                            "ota: downloaded {} / {} bytes",
+                            "updater: downloaded {} / {} bytes",
                             offset,
                             expected_size,
                         );
@@ -372,7 +372,7 @@ mod ota_download {
                     }
                     Err(Rp235xOtaError::Http) if attempt < MAX_ATTEMPTS => {
                         log::warn!(
-                            "ota: retrying range {}-{} ({}/{})",
+                            "updater: retrying range {}-{} ({}/{})",
                             segment_start,
                             segment_end,
                             attempt + 1,

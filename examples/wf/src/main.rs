@@ -70,7 +70,7 @@ async fn main(spawner: Spawner) {
     let network = Rp235xCyw43::new(wifi_resources, spawner).await;
     let mut ota = network.ota(p.FLASH, UPDATE_MANIFEST_URL);
     if let Err(error) = ota.confirm_boot() {
-        log::error!("ota: failed to confirm current firmware: {:?}", error);
+        log::error!("updater: failed to confirm current firmware: {:?}", error);
         debugger.indicator.red(true);
         return;
     }
@@ -99,20 +99,20 @@ async fn main(spawner: Spawner) {
     log::info!("  - Ipv4: {:?}", ipv4);
     debugger.indicator.green(true);
 
-    log::info!("ota: checking for update from {}", CURRENT_VERSION);
+    log::info!("updater: checking for update from {}", CURRENT_VERSION);
     match runtime_core::check(&mut ota, CURRENT_VERSION).await {
         Ok(OtaStatus::UpToDate) => {
-            log::info!("ota: firmware is up to date");
+            log::info!("updater: firmware is up to date");
             debugger.indicator.blue(true);
         }
         Ok(OtaStatus::ReadyToReboot) => {
-            log::info!("ota: update verified; rebooting");
+            log::info!("updater: update verified; rebooting");
             debugger.indicator.blue(true);
             Timer::after_secs(1).await;
             cortex_m::peripheral::SCB::sys_reset();
         }
         Err(error) => {
-            log::error!("ota: update failed: {:?}", error);
+            log::error!("updater: update failed: {:?}", error);
             debugger.indicator.red(true);
             debugger.indicator.blue(false);
         }

@@ -6,3 +6,5 @@ authors.workspace = true
 license.workspace = true
 
 [dependencies]
+heapless = { workspace = true }
+serde = { version = "1.0.229", features = ["derive"] }

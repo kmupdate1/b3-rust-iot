@@ -1693,6 +1693,10 @@ checksum = "c08d65885ee38876c4f86fa503fb49d7b507c2b62552df7c70b2fce627e06381"
 [[package]]
 name = "ota"
 version = "0.1.0"
+dependencies = [
+ "heapless 0.9.3",
+ "serde",
+]
 
 [[package]]
 name = "p256"
