@@ -1,18 +1,12 @@
 #![no_std]
 
 mod manifest;
-mod manifest_source;
-mod firmware_downloader;
-mod firmware_writer;
-mod firmware_verifier;
-mod boot_state;
+mod firmware;
+mod activation;
 
 pub use manifest::*;
-pub use manifest_source::*;
-pub use firmware_downloader::*;
-pub use firmware_writer::*;
-pub use firmware_verifier::*;
-pub use boot_state::*;
+pub use firmware::*;
+pub use activation::*;
 
 pub trait Ota {
     type Error;

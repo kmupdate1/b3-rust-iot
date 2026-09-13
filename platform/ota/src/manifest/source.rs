@@ -1,4 +1,4 @@
-use crate::manifest::UpdateManifest;
+use crate::manifest::model::UpdateManifest;
 
 pub trait ManifestSource {
     type Error;
