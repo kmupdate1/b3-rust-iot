@@ -26,5 +26,5 @@ bt-hci = "0.9.0"
 reqwless = {
     git = "https://github.com/drogue-iot/reqwless",
     rev = "68f703dfc16e6f7f964b7238c922c0d433118872",
-    features = ["defmt"]
+    features = ["defmt", "alloc"]
 }
