@@ -21,6 +21,7 @@ const CURRENT_VERSION: &str = match option_env!("B3_FIRMWARE_VERSION") {
     Some(version) => version,
     None => env!("CARGO_PKG_VERSION"),
 };
+
 const UPDATE_MANIFEST_URL: &str =
     "https://github.com/kmupdate1/b3-rust-iot/releases/latest/download/update-manifest.json";
 

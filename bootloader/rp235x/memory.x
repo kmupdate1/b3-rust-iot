@@ -15,6 +15,7 @@ SECTIONS {
 } INSERT AFTER .vector_table;
 
 _stext = ADDR(.start_block) + SIZEOF(.start_block);
+
 SECTIONS {
   .bi_entries : ALIGN(4) {
     __bi_entries_start = .;
@@ -23,6 +24,13 @@ SECTIONS {
     __bi_entries_end = .;
   } > FLASH
 } INSERT AFTER .text;
+
+SECTIONS {
+  .end_block : ALIGN(4) {
+    __end_block_addr = .;
+    KEEP(*(.end_block));
+  } > FLASH
+} INSERT AFTER .uninit;
 
 PROVIDE(start_to_end = __end_block_addr - __start_block_addr);
 PROVIDE(end_to_start = __start_block_addr - __end_block_addr);

@@ -133,7 +133,7 @@ impl Ota for Rp235xOta<'_> {
     type Error = Rp235xOtaError;
 
     async fn available(&mut self, current_v: &str) -> Result<bool, Self::Error> {
-        let mut buffer = [0u8; 4096];
+        let mut buffer = [0u8; 16 * 1024];
         let mut http = Rp235xHttp::new(self.stack);
         let len = http.get(self.manifest_url, &mut buffer).await.map_err(|_| Rp235xOtaError::Http)?;
         let manifest = Self::parse_manifest(&buffer[..len])?;
@@ -218,11 +218,21 @@ mod ota_download {
 
         for redirect_count in 0..=3 {
             let next_url = {
-                let mut header_buffer = [0u8; 4096];
-                let mut request = client.request(Method::GET, current_url.as_str()).await
-                    .map_err(|_| Rp235xOtaError::Http)?;
-                let response = request.send(&mut header_buffer).await
-                    .map_err(|_| Rp235xOtaError::Http)?;
+                let mut header_buffer = [0u8; 16 * 1024];
+                let mut request = client
+                    .request(Method::GET, current_url.as_str())
+                    .await
+                    .map_err(|error| {
+                        log::error!("OTA: firmware request creation failed: {:?}", error);
+                        Rp235xOtaError::Http
+                    })?;
+                let response = request
+                    .send(&mut header_buffer)
+                    .await
+                    .map_err(|error| {
+                        log::error!("OTA: firmware request creation failed: {:?}", error);
+                        Rp235xOtaError::Http
+                    })?;
 
                 if response.status.is_successful() {
                     if response.content_length != Some(expected_size as usize) {

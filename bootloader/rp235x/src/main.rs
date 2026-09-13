@@ -39,3 +39,8 @@ unsafe extern "C" fn HardFault() {
 unsafe fn DefaultHandler(_: i16) -> ! {
     panic!()
 }
+
+#[defmt::panic_handler]
+fn defmt_panic() -> ! {
+    cortex_m::asm::udf()
+}
