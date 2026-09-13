@@ -94,6 +94,10 @@
       <sourceFolder url="file://$MODULE_DIR$/bootloader/rp235x/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/debugger/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/debugger/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/platform/debugger/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/platform/debugger/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/platform/ota/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/platform/ota/tests" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/embassy/embassy-executor/target" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/embassy/embassy-rp/target" />

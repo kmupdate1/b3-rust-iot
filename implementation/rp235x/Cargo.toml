@@ -7,7 +7,8 @@ license.workspace = true
 
 [dependencies]
 capability = { path = "../../capability" }
-debugger = { path = "../../debugger" }
+ota = { path = "../../platform/ota" }
+debugger = { path = "../../platform/debugger" }
 runtime-core = { path = "../../runtime/runtime-core" }
 
 embassy-rp = { workspace = true }

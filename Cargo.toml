@@ -27,7 +27,8 @@ members = [
     #"examples/led",
     "examples/wf",
 
-    "debugger",
+    "platform/ota",
+    "platform/debugger",
 ]
 
 [workspace.package]

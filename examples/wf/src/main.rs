@@ -67,7 +67,7 @@ async fn main(spawner: Spawner) {
         p.PIN_2,
     );
 
-    let network = Rp235xCyw43::builder(wifi_resources, spawner).await;
+    let network = Rp235xCyw43::new(wifi_resources, spawner).await;
     let mut ota = network.ota(p.FLASH, UPDATE_MANIFEST_URL);
     if let Err(error) = ota.confirm_boot() {
         log::error!("ota: failed to confirm current firmware: {:?}", error);

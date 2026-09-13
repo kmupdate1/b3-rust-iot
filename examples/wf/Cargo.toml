@@ -22,7 +22,8 @@ cortex-m = { workspace = true }
 pump = { path = "../../driver/actuator/pump" }
 mux = { path = "../../driver/mux" }
 capability = { path = "../../capability" }
-debugger = { path = "../../debugger" }
+ota = { path = "../../platform/ota" }
+debugger = { path = "../../platform/debugger" }
 field-edge = { path = "../../device/field-edge" }
 rp235x = { path = "../../implementation/rp235x" }
 runtime-core = { path = "../../runtime/runtime-core" }
