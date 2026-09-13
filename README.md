@@ -13,6 +13,7 @@ The important rule is to keep responsibilities and dependency directions clear.
 
 ## Target Structure
 
+```text
 iot/
 ├── runtime/
 │   ├── runtime-core/
@@ -46,6 +47,7 @@ iot/
 │   └── other-products/
 │
 └── examples/
+```
 
 
 ## runtime/
@@ -67,9 +69,11 @@ The runtime should avoid depending directly on a specific MCU implementation.
 
 Example:
 
+```text
 runtime-core
     ↓
 capability traits
+```
 
 The runtime should request capabilities such as networking, storage, reboot,
 Bluetooth, OTA storage, or device identity without knowing whether they are
@@ -105,9 +109,11 @@ Capability definitions must not depend on a specific MCU vendor SDK.
 
 Example:
 
+```text
 driver
     ↓
 capability::I2c
+```
 
 A sensor driver should not know whether I2C is provided by RP235x, ESP32,
 STM32, or another platform.
@@ -242,11 +248,13 @@ The board layer is allowed to know concrete HAL implementations.
 
 Example:
 
+```text
 board
     ↓
 hal/rp235x
     ↓
 embassy-rp
+```
 
 
 The board layer creates concrete hardware objects and passes them into runtime
@@ -275,6 +283,7 @@ follow the same abstraction boundaries as production domain code.
 
 Preferred dependency direction:
 
+```text
 runtime
     ↓
 domain
@@ -282,6 +291,7 @@ domain
 driver
     ↓
 hal/capability
+```
 
 Platform implementation:
 
@@ -321,11 +331,13 @@ Board:
 
 Then:
 
+```text
 board + runtime + domain + drivers + HAL
                     ↓
                  build
                     ↓
              firmware image
+```
 
 
 ## Future Repository Split
