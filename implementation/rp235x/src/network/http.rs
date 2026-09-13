@@ -47,16 +47,19 @@ impl Http for Rp235xHttp {
         let mut request = client
             .request(Method::GET, url)
             .await
-            .map_err(|_| {
-                log::error!("http: request creation failed");
+            .map_err(|error| {
+                log::error!("http: request creation failed: {:?}", error);
                 ()
             })?;
 
         let response = request
             .send(buffer)
             .await
-            .map_err(|_| {
-                log::error!("http: request send or response header read failed");
+            .map_err(|error| {
+                log::error!(
+                    "http: request send or response header read failed: {:?}",
+                    error,
+                );
                 ()
             })?;
 
@@ -82,8 +85,8 @@ impl Http for Rp235xHttp {
             .body()
             .read_to_end()
             .await
-            .map_err(|_| {
-                log::error!("http: response body read failed");
+            .map_err(|error| {
+                log::error!("http: response body read failed: {:?}", error);
                 ()
             })?;
 
