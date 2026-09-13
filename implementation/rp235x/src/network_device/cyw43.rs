@@ -100,9 +100,11 @@ impl Rp235xCyw43 {
             .await;
         log::info!("cyw43: power management configured");
 
-        let config = embassy_net::Config::dhcpv4(
+        let mut config = embassy_net::Config::dhcpv4(
             DhcpConfig::default()
         );
+
+        config.ipv6 = embassy_net::ConfigV6::Slaac;
 
         let (stack, net_runner) = embassy_net::new(
             net_device,

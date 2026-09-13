@@ -1,4 +1,4 @@
-use core::net::Ipv4Addr;
+use core::net::{Ipv4Addr, Ipv6Addr};
 use crate::{Rp235xCyw43, Rp235xTcp, Rp235xUdp};
 use cyw43::JoinOptions;
 use capability::{IpNetworkDevice, NetworkDevice, Wifi};
@@ -29,7 +29,15 @@ impl NetworkDevice for Rp235xWifi<'_> {
 
 impl IpNetworkDevice for Rp235xWifi<'_> {
     fn ipv4_addr(&self) -> Option<Ipv4Addr> {
-        todo!()
+        let addr = self.network.stack.config_v4()?.address.address();
+
+        Some(Ipv4Addr::from(addr.octets()))
+    }
+
+    fn ipv6_addr(&self) -> Option<Ipv6Addr> {
+        let addr = self.network.stack.config_v6()?.address.address();
+
+        Some(Ipv6Addr::from(addr))
     }
 }
 
@@ -53,6 +61,15 @@ impl Wifi for Rp235xWifi<'_> {
     }
 
     async fn disconnect(&mut self) -> Result<(), Self::Error> {
-        todo!()
+        let mut control = self.network.control.lock().await;
+
+        control.leave().await;
+
+        drop(control);
+
+        self.network.stack.wait_config_down().await;
+        self.network.stack.wait_link_down().await;
+
+        Ok(())
     }
 }

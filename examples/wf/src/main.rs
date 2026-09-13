@@ -9,7 +9,7 @@ use embassy_rp::bind_interrupts;
 use embassy_rp::peripherals::USB;
 use embassy_rp::usb::{Driver, InterruptHandler};
 use embassy_time::Timer;
-use capability::{Http, Wifi};
+use capability::{Http, IpNetworkDevice, Wifi};
 use rp235x::{Pico2wCyw43Resources, Rp235xCyw43, Rp235xWifi};
 use embedded_alloc::LlffHeap;
 use debugger::Indicator;
@@ -65,6 +65,9 @@ async fn main(spawner: Spawner) {
         .unwrap();
 
     log::info!("Wi-Fi connected");
+    log::info!("  - IpV4: {:?}", wifi.ipv4_addr());
+    log::info!("  - IpV6: {:?}", wifi.ipv6_addr());
+
     debugger.indicator.green(true);
 
     let mut http = network.http();
