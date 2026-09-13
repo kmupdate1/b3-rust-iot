@@ -177,18 +177,25 @@ impl Ota for Rp235xOta<'_> {
 }
 
 mod ota_download {
+    use core::fmt::Write as _;
+
     use embassy_boot_rp::{AlignedBuffer, BlockingFirmwareUpdater};
     use embassy_net::dns::DnsSocket;
     use embassy_net::tcp::client::{TcpClient, TcpClientState};
     use embassy_net::Stack;
     use embassy_rp::clocks::RoscRng;
+    use embassy_time::Timer;
     use embedded_io_async::Read;
     use embedded_storage::nor_flash::NorFlash;
     use heapless::String;
     use reqwless::client::{HttpClient, TlsConfig, TlsVerify};
-    use reqwless::request::Method;
+    use reqwless::request::{Method, RequestBuilder};
 
     use super::Rp235xOtaError;
+
+    const SEGMENT_SIZE: usize = 32 * 1024;
+    const MAX_ATTEMPTS: usize = 5;
+    const MAX_REDIRECTS: usize = 3;
 
     pub async fn download_to_updater<DFU, STATE>(
         stack: Stack<'static>,
@@ -213,91 +220,172 @@ mod ota_download {
             TlsVerify::None,
         );
         let mut client = HttpClient::new_with_tls(&tcp, &dns, tls);
-        let mut current_url = String::<2048>::new();
-        current_url.push_str(url).map_err(|_| Rp235xOtaError::ManifestFieldTooLong)?;
 
-        for redirect_count in 0..=3 {
-            let next_url = {
-                let mut header_buffer = [0u8; 16 * 1024];
-                let mut request = client
-                    .request(Method::GET, current_url.as_str())
-                    .await
-                    .map_err(|error| {
-                        log::error!("OTA: firmware request creation failed: {:?}", error);
-                        Rp235xOtaError::Http
-                    })?;
-                let response = request
-                    .send(&mut header_buffer)
-                    .await
-                    .map_err(|error| {
-                        log::error!("OTA: firmware request creation failed: {:?}", error);
-                        Rp235xOtaError::Http
-                    })?;
+        let expected_size = expected_size as usize;
+        let mut offset = 0usize;
 
-                if response.status.is_successful() {
-                    if response.content_length != Some(expected_size as usize) {
-                        return Err(Rp235xOtaError::FirmwareSizeMismatch);
-                    }
-                    let mut reader = response.body().reader();
-                    let mut chunk = AlignedBuffer([0u8; 4096]);
-                    let mut offset = 0usize;
-                    let mut next_progress = 64 * 1024;
+        while offset < expected_size {
+            let segment_start = offset;
+            let segment_end = core::cmp::min(segment_start + SEGMENT_SIZE, expected_size) - 1;
+            let segment_len = segment_end - segment_start + 1;
+            let mut attempt = 1usize;
 
-                    loop {
-                        let read = reader
-                            .read(&mut chunk.0)
-                            .await
-                            .map_err(|error| {
+            loop {
+                let result: Result<usize, Rp235xOtaError> = async {
+                    let mut current_url = String::<2048>::new();
+                    current_url
+                        .push_str(url)
+                        .map_err(|_| Rp235xOtaError::ManifestFieldTooLong)?;
+
+                    let mut range = String::<64>::new();
+                    write!(&mut range, "bytes={}-{}", segment_start, segment_end)
+                        .map_err(|_| Rp235xOtaError::Http)?;
+
+                    for redirect_count in 0..=MAX_REDIRECTS {
+                        let next_url = {
+                            let headers = [
+                                ("Range", range.as_str()),
+                                ("Connection", "close"),
+                            ];
+                            let mut header_buffer = [0u8; 16 * 1024];
+                            let request = client
+                                .request(Method::GET, current_url.as_str())
+                                .await
+                                .map_err(|error| {
+                                    log::error!(
+                                        "ota: firmware request failed at {} (attempt {}): {:?}",
+                                        segment_start,
+                                        attempt,
+                                        error,
+                                    );
+                                    Rp235xOtaError::Http
+                                })?;
+                            let mut request = request.headers(&headers);
+                            let response = request
+                                .send(&mut header_buffer)
+                                .await
+                                .map_err(|error| {
+                                    log::error!(
+                                        "ota: firmware response failed at {} (attempt {}): {:?}",
+                                        segment_start,
+                                        attempt,
+                                        error,
+                                    );
+                                    Rp235xOtaError::Http
+                                })?;
+
+                            if response.status.0 == 206 {
+                                if response.content_length != Some(segment_len) {
+                                    return Err(Rp235xOtaError::FirmwareSizeMismatch);
+                                }
+
+                                let mut reader = response.body().reader();
+                                let mut chunk = AlignedBuffer([0u8; 4096]);
+                                let mut received = 0usize;
+
+                                loop {
+                                    let read = reader
+                                        .read(&mut chunk.0)
+                                        .await
+                                        .map_err(|error| {
+                                            log::error!(
+                                                "ota: firmware body failed at {} (attempt {}): {:?}",
+                                                segment_start + received,
+                                                attempt,
+                                                error,
+                                            );
+                                            Rp235xOtaError::Http
+                                        })?;
+
+                                    if read == 0 {
+                                        break;
+                                    }
+                                    if received + read > segment_len {
+                                        return Err(Rp235xOtaError::FirmwareSizeMismatch);
+                                    }
+
+                                    updater
+                                        .write_firmware(
+                                            segment_start + received,
+                                            &chunk.0[..read],
+                                        )
+                                        .map_err(|_| Rp235xOtaError::Flash)?;
+                                    received += read;
+                                }
+
+                                return if received == segment_len {
+                                    Ok(received)
+                                } else {
+                                    Err(Rp235xOtaError::FirmwareSizeMismatch)
+                                };
+                            }
+
+                            if !response.status.is_redirection()
+                                || redirect_count == MAX_REDIRECTS
+                            {
                                 log::error!(
-                                    "OTA: firmware body read failed at {} bytes: {:?}",
-                                    offset,
-                                    error,
+                                    "ota: unexpected firmware response status {}",
+                                    response.status.0,
                                 );
-                                Rp235xOtaError::Http
-                            })?;
+                                return Err(Rp235xOtaError::Http);
+                            }
 
-                        if read == 0 { break; }
+                            let mut redirect = String::<2048>::new();
+                            for (name, value) in response.headers() {
+                                if name.eq_ignore_ascii_case("location") {
+                                    let value = core::str::from_utf8(value)
+                                        .map_err(|_| Rp235xOtaError::Http)?;
+                                    if !value.starts_with("https://") {
+                                        return Err(Rp235xOtaError::Http);
+                                    }
+                                    redirect
+                                        .push_str(value)
+                                        .map_err(|_| {
+                                            Rp235xOtaError::ManifestFieldTooLong
+                                        })?;
+                                    break;
+                                }
+                            }
 
-                        updater
-                            .write_firmware(offset, &chunk.0[..read])
-                            .map_err(|_| Rp235xOtaError::Flash)?;
+                            if redirect.is_empty() {
+                                return Err(Rp235xOtaError::Http);
+                            }
+                            redirect
+                        };
 
-                        offset += read;
-
-                        if offset >= next_progress || offset == expected_size as usize {
-                            log::info!(
-                                "ota: downloaded {} / {} bytes",
-                                offset,
-                                expected_size,
-                            );
-
-                            next_progress += 64 * 1024;
-                        }
+                        current_url = next_url;
                     }
 
-                    return if offset == expected_size as usize { Ok(()) }
-                    else { Err(Rp235xOtaError::FirmwareSizeMismatch) };
+                    Err(Rp235xOtaError::Http)
                 }
+                .await;
 
-                if !response.status.is_redirection() || redirect_count == 3 {
-                    return Err(Rp235xOtaError::Http);
-                }
-
-                let mut redirect = String::<2048>::new();
-
-                for (name, value) in response.headers() {
-                    if name.eq_ignore_ascii_case("location") {
-                        let value = core::str::from_utf8(value).map_err(|_| Rp235xOtaError::Http)?;
-                        if !value.starts_with("https://") { return Err(Rp235xOtaError::Http); }
-                        redirect.push_str(value).map_err(|_| Rp235xOtaError::ManifestFieldTooLong)?;
+                match result {
+                    Ok(received) => {
+                        offset += received;
+                        log::info!(
+                            "ota: downloaded {} / {} bytes",
+                            offset,
+                            expected_size,
+                        );
                         break;
                     }
+                    Err(Rp235xOtaError::Http) if attempt < MAX_ATTEMPTS => {
+                        log::warn!(
+                            "ota: retrying range {}-{} ({}/{})",
+                            segment_start,
+                            segment_end,
+                            attempt + 1,
+                            MAX_ATTEMPTS,
+                        );
+                        attempt += 1;
+                        Timer::after_secs(2).await;
+                    }
+                    Err(error) => return Err(error),
                 }
-                if redirect.is_empty() { return Err(Rp235xOtaError::Http); }
-                redirect
-            };
-            current_url = next_url;
+            }
         }
-        Err(Rp235xOtaError::Http)
+
+        Ok(())
     }
 }
