@@ -11,11 +11,11 @@ pub trait NetworkDevice {
 
 pub trait Ipv4NetworkDevice: NetworkDevice {
     fn ipv4_addr(&self) -> Option<Ipv4Addr>;
-    async fn wait_ipv4(&self) -> Result<Ipv4Addr, Self::Error>;
+    async fn wait_ipv4_addr(&self) -> Result<Ipv4Addr, Self::Error>;
 }
 
 pub trait Ipv6NetworkDevice: NetworkDevice {
     fn ipv6_addr(&self) -> Option<Ipv6Addr>;
     
-    async fn wait_ipv6(&self) -> Result<Ipv6Addr, Self::Error>;
+    async fn wait_ipv6_addr(&self) -> Result<Ipv6Addr, Self::Error>;
 }

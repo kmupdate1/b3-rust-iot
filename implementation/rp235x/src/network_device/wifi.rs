@@ -2,6 +2,7 @@ use core::net::{Ipv4Addr, Ipv6Addr};
 use crate::{Rp235xCyw43, Rp235xTcp, Rp235xUdp};
 use cyw43::JoinOptions;
 use capability::{Ipv4NetworkDevice, Ipv6NetworkDevice, NetworkDevice, Wifi};
+use embassy_time::Timer;
 
 pub struct Rp235xWifi<'a> {
     network: &'a Rp235xCyw43,
@@ -34,8 +35,14 @@ impl Ipv4NetworkDevice for Rp235xWifi<'_> {
         Some(Ipv4Addr::from(addr.octets()))
     }
 
-    async fn wait_ipv4(&self) -> Result<Ipv4Addr, Self::Error> {
-        todo!()
+    async fn wait_ipv4_addr(&self) -> Result<Ipv4Addr, Self::Error> {
+        loop {
+            if let Some(addr) = self.ipv4_addr() {
+                return Ok(addr);
+            }
+
+            Timer::after_millis(100).await;
+        }
     }
 }
 
@@ -43,11 +50,17 @@ impl Ipv6NetworkDevice for Rp235xWifi<'_> {
     fn ipv6_addr(&self) -> Option<Ipv6Addr> {
         let addr = self.network.stack.config_v6()?.address.address();
 
-        Some(Ipv6Addr::from(addr))
+        Some(Ipv6Addr::from(addr.octets()))
     }
-    
-    async fn wait_ipv6(&self) -> Result<Ipv6Addr, Self::Error> {
-        todo!()
+
+    async fn wait_ipv6_addr(&self) -> Result<Ipv6Addr, Self::Error> {
+        loop {
+            if let Some(addr) = self.ipv6_addr() {
+                return Ok(addr);
+            }
+
+            Timer::after_millis(100).await;
+        }
     }
 }
 
