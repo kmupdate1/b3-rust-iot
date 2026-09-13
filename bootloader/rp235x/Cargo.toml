@@ -15,6 +15,8 @@ embassy-time = { workspace = true }
 cortex-m = { workspace = true }
 cortex-m-rt = { workspace = true }
 embedded-storage = { workspace = true }
+defmt-rtt = { workspace = true }
+panic-probe = { workspace = true }
 
 [[bin]]
 name = "b3-rp235x-bootloader"

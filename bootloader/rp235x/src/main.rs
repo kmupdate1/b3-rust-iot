@@ -3,6 +3,8 @@
 
 use core::cell::RefCell;
 use cortex_m_rt::{entry, exception};
+use defmt_rtt as _;
+use panic_probe as _;
 use embassy_boot_rp::{BootLoader, BootLoaderConfig, WatchdogFlash};
 use embassy_sync::blocking_mutex::Mutex;
 use embassy_time::Duration;
@@ -36,9 +38,4 @@ unsafe extern "C" fn HardFault() {
 #[exception]
 unsafe fn DefaultHandler(_: i16) -> ! {
     panic!()
-}
-
-#[panic_handler]
-fn panic(_: &core::panic::PanicInfo) -> ! {
-    cortex_m::asm::udf();
 }
