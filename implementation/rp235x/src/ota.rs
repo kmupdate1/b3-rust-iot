@@ -110,9 +110,11 @@ impl Ota for Rp235xOta<'_> {
         let mut http = Rp235xHttp::new(self.stack);
         let len = http.get(self.manifest_url, &mut buffer).await.map_err(|_| Rp235xOtaError::Http)?;
         let manifest = Self::parse_manifest(&buffer[..len])?;
-        let available = manifest
-            .is_newer_than(current_v)
-            .map_err(|_| Rp235xOtaError::InvalidVersion)?;
+        let available = (
+            manifest.version.major,
+            manifest.version.minor,
+            manifest.version.patch,
+        ) > Self::version(current_v)?;
         self.pending = available.then_some(manifest);
         Ok(available)
     }
