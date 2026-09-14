@@ -7,7 +7,7 @@ use embedded_io_async::Read;
 use heapless::String;
 use reqwless::client::{HttpClient, TlsConfig, TlsVerify};
 use reqwless::request::{Method, RequestBuilder};
-use capability::Http;
+use capability::l7::http::Http;
 
 pub struct Rp235xHttp {
     stack: Stack<'static>,
@@ -208,7 +208,7 @@ impl Http for Rp235xHttp {
         for redirect_count in 0..=MAX_REDIRECTS {
             let redirect_url = {
                 let buf_start = buffer.as_ptr() as usize;
-                let request = client
+                let mut request = client
                     .request(Method::GET, current_url.as_str())
                     .await
                     .map_err(|error| {

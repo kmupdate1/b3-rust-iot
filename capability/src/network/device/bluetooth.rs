@@ -1,4 +1,4 @@
-use crate::NetworkDevice;
+use crate::device::NetworkDevice;
 
 pub trait Bluetooth: NetworkDevice {
     async fn enable(&mut self) -> Result<(), Self::Error>;

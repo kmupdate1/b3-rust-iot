@@ -1,6 +1,5 @@
 use core::cell::RefCell;
 
-use capability::Http;
 use embassy_boot_rp::{AlignedBuffer, BlockingFirmwareUpdater, FirmwareUpdaterConfig};
 use embassy_rp::flash::{Blocking, Flash};
 use embassy_rp::peripherals::FLASH;
@@ -11,7 +10,7 @@ use embedded_storage::nor_flash::ReadNorFlash;
 use ota::UpdateManifest;
 use runtime_core::Ota;
 use sha2::Sha256;
-
+use capability::l7::http::Http;
 use crate::Rp235xHttp;
 
 const FLASH_SIZE: usize = 4 * 1024 * 1024;

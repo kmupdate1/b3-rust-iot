@@ -1,4 +1,4 @@
-use crate::NetworkDevice;
+use crate::device::NetworkDevice;
 
 pub trait Wifi: NetworkDevice {
     async fn connect(

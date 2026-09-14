@@ -3,7 +3,7 @@ use core::result::Result;
 use embassy_net::{IpAddress, IpEndpoint};
 use embassy_net::tcp::TcpSocket;
 use embedded_io_async::Write;
-use capability::network::tcp::Tcp;
+use capability::network::ip::l4::tcp::Tcp;
 
 pub enum TcpError {
     Connect(embassy_net::tcp::ConnectError),

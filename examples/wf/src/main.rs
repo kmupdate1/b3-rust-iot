@@ -10,12 +10,13 @@ use embassy_rp::peripherals::USB;
 use embassy_rp::usb::{Driver, InterruptHandler};
 use embassy_rp::watchdog::Watchdog;
 use embassy_time::Timer;
-use capability::{Ipv4NetworkDevice, Wifi};
+use capability::{Wifi};
 use rp235x::{
     Pico2wCyw43Resources, Rp235xCyw43, Rp235xFirmwareStorage, Rp235xOta,
     Rp235xUpdateSource,
 };
 use embedded_alloc::LlffHeap;
+use capability::l3::Ipv4NetworkDevice;
 use debugger::Indicator;
 use rp235x::debugger::{Rp235xDebugger};
 use runtime_core::OtaStatus;

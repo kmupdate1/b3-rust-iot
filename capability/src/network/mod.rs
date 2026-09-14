@@ -1,7 +1,5 @@
-pub mod tcp;
-pub mod udp;
-pub mod http;
+pub mod device;
+pub mod ip;
 
-pub use tcp::*;
-pub use udp::*;
-pub use http::*;
+pub use device::*;
+pub use ip::*;

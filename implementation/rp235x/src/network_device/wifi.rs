@@ -1,5 +1,6 @@
 use crate::{Rp235xHttp, Rp235xTcp, Rp235xUdp};
-use capability::{Ipv4NetworkDevice, Ipv6NetworkDevice, NetworkDevice, Wifi};
+use capability::{NetworkDevice, Wifi};
+use capability::l3::{Ipv4NetworkDevice, Ipv6NetworkDevice};
 use core::net::{Ipv4Addr, Ipv6Addr};
 use cyw43::{Control, JoinOptions};
 use embassy_net::Stack;
