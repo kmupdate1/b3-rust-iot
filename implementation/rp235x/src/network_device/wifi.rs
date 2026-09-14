@@ -1,4 +1,4 @@
-use crate::{Rp235xTcp, Rp235xUdp};
+use crate::{Rp235xHttp, Rp235xTcp, Rp235xUdp};
 use capability::{Ipv4NetworkDevice, Ipv6NetworkDevice, NetworkDevice, Wifi};
 use core::net::{Ipv4Addr, Ipv6Addr};
 use cyw43::{Control, JoinOptions};
@@ -22,6 +22,10 @@ impl <'a> Rp235xWifi<'a> {
 }
 
 impl Rp235xWifi<'_> {
+    pub fn http(&self) -> Rp235xHttp {
+        Rp235xHttp::new(self.stack)
+    }
+
     pub fn tcp(&self) -> Rp235xTcp {
         Rp235xTcp::new(self.stack)
     }
