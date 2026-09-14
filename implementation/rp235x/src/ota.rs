@@ -9,7 +9,6 @@ use embassy_rp::Peri;
 use embassy_sync::blocking_mutex::Mutex;
 use embassy_sync::blocking_mutex::raw::NoopRawMutex;
 use embedded_storage::nor_flash::ReadNorFlash;
-use heapless::String;
 use runtime_core::Ota;
 use sha2::Sha256;
 use ota::UpdateManifest;
@@ -64,16 +63,7 @@ impl<'d> Rp235xOta<'d> {
     }
 
     fn parse_manifest(data: &[u8]) -> Result<UpdateManifest, Rp235xOtaError> {
-        let (wire, _) = serde_json_core::from_slice::<WireManifest<'_>>(data)
-            .map_err(|_| Rp235xOtaError::Manifest)?;
-        let mut version = String::new();
-        version.push_str(wire.version).map_err(|_| Rp235xOtaError::ManifestFieldTooLong)?;
-        let mut firmware_url = String::new();
-        firmware_url.push_str(wire.firmware_url.unwrap_or_default()).map_err(|_| Rp235xOtaError::ManifestFieldTooLong)?;
-        let mut sha256 = String::new();
-        sha256.push_str(wire.sha256.unwrap_or_default()).map_err(|_| Rp235xOtaError::ManifestFieldTooLong)?;
-
-        Ok(UpdateManifest { version, firmware_url, size: wire.size.unwrap_or_default(), sha256 })
+        ota::parser::json(data).map_err(|_| Rp235xOtaError::Manifest)
     }
 
     fn decode_sha256(value: &str) -> Result<[u8; 32], Rp235xOtaError> {
@@ -120,7 +110,9 @@ impl Ota for Rp235xOta<'_> {
         let mut http = Rp235xHttp::new(self.stack);
         let len = http.get(self.manifest_url, &mut buffer).await.map_err(|_| Rp235xOtaError::Http)?;
         let manifest = Self::parse_manifest(&buffer[..len])?;
-        let available = Self::version(manifest.version.as_str())? > Self::version(current_v)?;
+        let available = manifest
+            .is_newer_than(current_v)
+            .map_err(|_| Rp235xOtaError::InvalidVersion)?;
         self.pending = available.then_some(manifest);
         Ok(available)
     }
