@@ -5,6 +5,7 @@ pub mod parser;
 use heapless::String;
 pub use model::*;
 pub use source::*;
+
 use crate::version;
 
 impl UpdateManifest {
@@ -40,5 +41,10 @@ impl UpdateManifest {
             size,
             sha256: sha256_value,
         })
+    }
+
+    pub fn is_newer_than(&self, current_version: &str) -> Result<bool, ManifestError> {
+        let current = version::parser::version(current_version)?;
+        Ok(self.version.is_newer_than(&current))
     }
 }
