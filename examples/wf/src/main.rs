@@ -69,12 +69,6 @@ async fn main(spawner: Spawner) {
 
     let network = Rp235xCyw43::new(wifi_resources, spawner).await;
     let mut ota = network.ota(p.FLASH, UPDATE_MANIFEST_URL);
-    if let Err(error) = ota.confirm_boot() {
-        log::error!("updater: failed to confirm current firmware: {:?}", error);
-        debugger.indicator.red(true);
-        return;
-    }
-    watchdog.stop();
     let mut wifi = Rp235xWifi::new(&network);
 
     log::info!("connecting to Wi-Fi");
@@ -97,6 +91,16 @@ async fn main(spawner: Spawner) {
 
     log::info!("Wi-Fi connected");
     log::info!("  - Ipv4: {:?}", ipv4);
+
+    // Confirm a tentative image only after the board, Wi-Fi, and IPv4
+    // configuration have passed the minimum startup health check.
+    if let Err(error) = ota.confirm_boot() {
+        log::error!("updater: failed to confirm current firmware: {:?}", error);
+        debugger.indicator.red(true);
+        return;
+    }
+    watchdog.stop();
+
     debugger.indicator.green(true);
 
     log::info!("updater: checking for update from {}", CURRENT_VERSION);
