@@ -11,7 +11,10 @@ use embassy_rp::usb::{Driver, InterruptHandler};
 use embassy_rp::watchdog::Watchdog;
 use embassy_time::Timer;
 use capability::{Ipv4NetworkDevice, Wifi};
-use rp235x::{Pico2wCyw43Resources, Rp235xCyw43, Rp235xOta, Rp235xWifi};
+use rp235x::{
+    Pico2wCyw43Resources, Rp235xCyw43, Rp235xFirmwareStorage, Rp235xOta,
+    Rp235xUpdateSource,
+};
 use embedded_alloc::LlffHeap;
 use debugger::Indicator;
 use rp235x::debugger::{Rp235xDebugger};
@@ -70,7 +73,6 @@ async fn main(spawner: Spawner) {
     let network = Rp235xCyw43::new(nw_resources, spawner).await;
     let mut wifi = network.wifi();
 
-    let mut ota = Rp235xOta::new(wifi.stack, p.FLASH, UPDATE_MANIFEST_URL);
 
     log::info!("connecting to Wi-Fi");
 
@@ -93,9 +95,13 @@ async fn main(spawner: Spawner) {
     log::info!("Wi-Fi connected");
     log::info!("  - Ipv4: {:?}", ipv4);
 
+    let source = Rp235xUpdateSource::new(wifi.http());
+    let storage = Rp235xFirmwareStorage::new(p.FLASH);
+    let mut updater = Rp235xOta::new(source, storage, UPDATE_MANIFEST_URL);
+
     // Confirm a tentative image only after the board, Wi-Fi, and IPv4
     // configuration have passed the minimum startup health check.
-    if let Err(error) = ota.confirm_boot() {
+    if let Err(error) = updater.confirm_boot() {
         log::error!("updater: failed to confirm current firmware: {:?}", error);
         debugger.indicator.red(true);
         return;
@@ -105,7 +111,7 @@ async fn main(spawner: Spawner) {
     debugger.indicator.green(true);
 
     log::info!("updater: checking for update from {}", CURRENT_VERSION);
-    match runtime_core::check(&mut ota, CURRENT_VERSION).await {
+    match runtime_core::check(&mut updater, CURRENT_VERSION).await {
         Ok(OtaStatus::UpToDate) => {
             log::info!("updater: firmware is up to date");
             debugger.indicator.blue(true);
