@@ -11,7 +11,7 @@ use embassy_rp::usb::{Driver, InterruptHandler};
 use embassy_rp::watchdog::Watchdog;
 use embassy_time::Timer;
 use capability::{Ipv4NetworkDevice, Wifi};
-use rp235x::{Pico2wCyw43Resources, Rp235xCyw43, Rp235xWifi};
+use rp235x::{Pico2wCyw43Resources, Rp235xCyw43, Rp235xOta, Rp235xWifi};
 use embedded_alloc::LlffHeap;
 use debugger::Indicator;
 use rp235x::debugger::{Rp235xDebugger};
@@ -51,7 +51,7 @@ async fn main(spawner: Spawner) {
     Timer::after_secs(2).await;
     log::info!("wf example started");
 
-    let wifi_resources = Pico2wCyw43Resources::new(
+    let nw_resources = Pico2wCyw43Resources::new(
         p.PIN_23,
         p.PIN_25,
         p.PIN_24,
@@ -67,9 +67,10 @@ async fn main(spawner: Spawner) {
         p.PIN_2,
     );
 
-    let network = Rp235xCyw43::new(wifi_resources, spawner).await;
-    let mut ota = network.ota(p.FLASH, UPDATE_MANIFEST_URL);
-    let mut wifi = Rp235xWifi::new(&network);
+    let network = Rp235xCyw43::new(nw_resources, spawner).await;
+    let mut wifi = network.wifi();
+
+    let mut ota = Rp235xOta::new(wifi.stack, p.FLASH, UPDATE_MANIFEST_URL);
 
     log::info!("connecting to Wi-Fi");
 

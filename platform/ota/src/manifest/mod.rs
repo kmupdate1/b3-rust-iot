@@ -35,7 +35,7 @@ impl UpdateManifest {
             .map_err(|_| ManifestError::FieldTooLong)?;
 
         Ok(Self {
-            version: version::parser::version(version)?,
+            version: version::parser::parse(version)?,
             firmware_url: firmware_url_value,
             size,
             sha256: sha256_value,

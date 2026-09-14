@@ -2,7 +2,7 @@ use heapless::String;
 use crate::ManifestError;
 use crate::version::Version;
 
-pub fn version(sem_ver: &str) -> Result<Version, ManifestError> {
+pub fn parse(sem_ver: &str) -> Result<Version, ManifestError> {
     let value = sem_ver.strip_prefix('v').unwrap_or(sem_ver);
 
     let (release, build) = match value.split_once('+') {

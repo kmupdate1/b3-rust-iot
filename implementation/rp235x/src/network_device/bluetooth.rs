@@ -1,18 +1,26 @@
 pub mod host;
 pub mod resources;
 
-use crate::Rp235xCyw43;
 use capability::{Bluetooth, BluetoothError, NetworkDevice};
+use cyw43::bluetooth::BtDriver;
+use cyw43::Control;
+use embassy_sync::blocking_mutex::raw::ThreadModeRawMutex;
+use embassy_sync::mutex::Mutex;
 
 pub struct Rp235xBluetooth<'a> {
-    network: &'a Rp235xCyw43,
+    control: &'a Mutex<ThreadModeRawMutex, Control<'static>>,
+    bluetooth: &'a Mutex<ThreadModeRawMutex, BtDriver<'static>>,
     enabled: bool,
 }
 
 impl<'a> Rp235xBluetooth<'a> {
-    pub fn new(network: &'a Rp235xCyw43) -> Self {
+    pub(crate) fn new(
+        control: &'a Mutex<ThreadModeRawMutex, Control<'static>>,
+        bluetooth: &'a Mutex<ThreadModeRawMutex, BtDriver<'static>>,
+    ) -> Self {
         Self {
-            network,
+            control,
+            bluetooth,
             enabled: false,
         }
     }
@@ -26,8 +34,8 @@ impl<'a> Bluetooth for Rp235xBluetooth<'a> {
     async fn enable(&mut self) -> Result<(), Self::Error> {
         if self.enabled { return Ok(()); }
 
-        let mut control = self.network.control.lock().await;
-        let mut bluetooth = self.network.bluetooth.lock().await;
+        let control = self.control.lock().await;
+        let bluetooth = self.bluetooth.lock().await;
 
         drop(bluetooth);
         drop(control);
@@ -42,8 +50,8 @@ impl<'a> Bluetooth for Rp235xBluetooth<'a> {
             return Err(BluetoothError::NotEnabled);
         }
 
-        let mut control = self.network.control.lock().await;
-        let mut bluetooth = self.network.bluetooth.lock().await;
+        let control = self.control.lock().await;
+        let bluetooth = self.bluetooth.lock().await;
 
         drop(bluetooth);
         drop(control);

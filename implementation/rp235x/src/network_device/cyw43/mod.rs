@@ -10,12 +10,13 @@ use embassy_net::Stack;
 use embassy_rp::clocks::RoscRng;
 use embassy_sync::blocking_mutex::raw::ThreadModeRawMutex;
 use embassy_sync::mutex::Mutex;
-use crate::Pico2wCyw43Resources;
+use crate::{Pico2wCyw43Resources, Rp235xBluetooth};
+use crate::wifi::Rp235xWifi;
 
 pub struct Rp235xCyw43 {
-    pub(crate) control: Mutex<ThreadModeRawMutex, Control<'static>>,
-    pub(crate) stack: Stack<'static>,
-    pub(crate) bluetooth: Mutex<ThreadModeRawMutex, BtDriver<'static>>,
+    control: Mutex<ThreadModeRawMutex, Control<'static>>,
+    stack: Stack<'static>,
+    bluetooth: Mutex<ThreadModeRawMutex, BtDriver<'static>>,
 }
 
 impl Rp235xCyw43 {
@@ -43,5 +44,19 @@ impl Rp235xCyw43 {
             stack,
             bluetooth: Mutex::new(fw.bluetooth),
         }
+    }
+
+    pub fn wifi(&self) -> Rp235xWifi<'_> {
+        Rp235xWifi::new(
+            &self.control,
+            self.stack,
+        )
+    }
+
+    pub fn bluetooth(&self) -> Rp235xBluetooth<'_> {
+        Rp235xBluetooth::new(
+            &self.control,
+            &self.bluetooth,
+        )
     }
 }

@@ -37,7 +37,7 @@ pub struct Rp235xOta<'d> {
 }
 
 impl<'d> Rp235xOta<'d> {
-    pub(crate) fn new(
+    pub fn new(
         stack: Stack<'static>,
         flash: Peri<'d, FLASH>,
         manifest_url: &'static str,

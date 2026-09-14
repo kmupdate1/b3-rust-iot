@@ -59,9 +59,9 @@ async fn main(spawner: Spawner) {
     red.start();
     Timer::after(Duration::from_secs(1)).await;
 
-    let network = Rp235xCyw43::builder(wifi_resources, spawner).await;
-    let mut wifi = Rp235xWifi::new(&network);
-    let mut bluetooth = Rp235xBluetooth::new(&network);
+    let network = Rp235xCyw43::new(wifi_resources, spawner).await;
+    let mut wifi = network.wifi();
+    let mut bluetooth = network.bluetooth();
 
     red.stop();
 
