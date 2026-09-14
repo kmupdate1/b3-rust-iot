@@ -11,28 +11,11 @@ use embassy_sync::blocking_mutex::raw::NoopRawMutex;
 use embedded_storage::nor_flash::ReadNorFlash;
 use heapless::String;
 use runtime_core::Ota;
-use serde::Deserialize;
 use sha2::Sha256;
-
+use ota::UpdateManifest;
 use crate::Rp235xHttp;
 
 const FLASH_SIZE: usize = 4 * 1024 * 1024;
-
-#[derive(Debug, Clone)]
-pub struct UpdateManifest {
-    pub version: String<32>,
-    pub firmware_url: String<512>,
-    pub size: u32,
-    pub sha256: String<64>,
-}
-
-#[derive(Deserialize)]
-struct WireManifest<'a> {
-    version: &'a str,
-    firmware_url: Option<&'a str>,
-    size: Option<u32>,
-    sha256: Option<&'a str>,
-}
 
 #[derive(Debug)]
 pub enum Rp235xOtaError {

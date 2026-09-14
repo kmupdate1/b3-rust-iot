@@ -3,6 +3,7 @@
 mod manifest;
 mod firmware;
 mod activation;
+mod version;
 
 pub use manifest::*;
 pub use firmware::*;
