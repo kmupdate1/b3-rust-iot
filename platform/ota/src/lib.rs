@@ -8,7 +8,6 @@ mod version;
 pub use manifest::*;
 pub use firmware::*;
 pub use activation::*;
-pub use version::*;
 
 pub trait Ota {
     type Error;
