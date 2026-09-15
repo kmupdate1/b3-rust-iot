@@ -22,12 +22,11 @@ pub(super) struct Firmware {
 pub(super) async fn init(bus: Bus) -> Firmware {
     let fw = aligned_bytes!("../../../firmware/43439A0.bin");
     let btfw = aligned_bytes!("../../../firmware/43439A0_btfw.bin");
-    let clm = aligned_bytes!("../../../firmware/43439A0_clm.bin");
     let nvram = aligned_bytes!("../../../firmware/nvram_rp2040.bin");
 
     let state = STATE.init(cyw43::State::new());
 
-    let (net_device, bluetooth, mut control, runner) =
+    let (net_device, bluetooth, control, runner) =
         cyw43::new_with_bluetooth(
             state,
             bus.pwr,
@@ -37,18 +36,22 @@ pub(super) async fn init(bus: Bus) -> Firmware {
             nvram,
         ).await;
 
-    control
-        .init(clm)
-        .await;
-
-    control
-        .set_power_management(cyw43::PowerManagementMode::Performance)
-        .await;
-
     Firmware {
         net_device,
         bluetooth,
         control,
         runner,
     }
+}
+
+pub(super) async fn control(
+    control: &mut Control<'static>,
+) {
+    let clm = aligned_bytes!("../../../firmware/43439A0_clm.bin");
+
+    control.init(clm).await;
+
+    control
+        .set_power_management(cyw43::PowerManagementMode::Performance)
+        .await;
 }

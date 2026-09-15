@@ -28,13 +28,15 @@ impl Rp235xCyw43 {
         let seed = rng.next_u64();
 
         let bus = bus::init(resources);
-        let fw = firmware::init(bus).await;
+        let mut fw = firmware::init(bus).await;
 
         spawner
             .spawn(runner::cyw43_task(fw.runner).unwrap());
 
+        firmware::control(&mut fw.control).await;
+
         let (stack, net_runner) =
-        network::init(fw.net_device, seed);
+            network::init(fw.net_device, seed);
 
         spawner
             .spawn(network::net_task(net_runner).unwrap());

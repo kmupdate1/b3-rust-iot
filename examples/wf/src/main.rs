@@ -9,7 +9,7 @@ use embassy_rp::bind_interrupts;
 use embassy_rp::peripherals::USB;
 use embassy_rp::usb::{Driver, InterruptHandler};
 use embassy_rp::watchdog::Watchdog;
-use embassy_time::Timer;
+use embassy_time::{Duration, Timer};
 use capability::{Wifi};
 use rp235x::{
     Pico2wCyw43Resources, Rp235xCyw43, Rp235xFirmwareStorage, Rp235xOta,
@@ -53,7 +53,7 @@ async fn main(spawner: Spawner) {
 
     // Give macOS time to enumerate the USB serial device before startup logs.
     Timer::after_secs(2).await;
-    log::info!("wf example started");
+    log::info!("main: example started");
 
     let nw_resources = Pico2wCyw43Resources::new(
         p.PIN_23,
@@ -65,17 +65,23 @@ async fn main(spawner: Spawner) {
         p.DMA_CH1,
     );
 
+    log::info!("main: n/w resources prepared");
+
     let mut debugger = Rp235xDebugger::new(
         p.PIN_0,
         p.PIN_1,
         p.PIN_2,
     );
 
+    log::info!("main: n/w debugger activated");
+
     let network = Rp235xCyw43::new(nw_resources, spawner).await;
+
+    log::info!("main: n/w network activated");
+
     let mut wifi = network.wifi();
 
-
-    log::info!("connecting to Wi-Fi");
+    log::info!("main: connecting to Wi-Fi");
 
     let con = wifi
         .connect("Buffalo-2G-8F20", "hrtsedgmndi6c")

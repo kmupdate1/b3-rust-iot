@@ -2,7 +2,7 @@ use crate::{Rp235xHttp, Rp235xTcp, Rp235xUdp};
 use capability::{NetworkDevice, Wifi};
 use capability::l3::{Ipv4NetworkDevice, Ipv6NetworkDevice};
 use core::net::{Ipv4Addr, Ipv6Addr};
-use cyw43::{Control, JoinOptions};
+use cyw43::{Control, JoinAuth, JoinOptions};
 use embassy_net::Stack;
 use embassy_sync::blocking_mutex::raw::ThreadModeRawMutex;
 use embassy_sync::mutex::Mutex;
@@ -80,18 +80,29 @@ impl Ipv6NetworkDevice for Rp235xWifi<'_> {
 
 impl Wifi for Rp235xWifi<'_> {
     async fn connect(&mut self, ssid: &str, password: &str) -> Result<(), Self::Error> {
+        log::info!("Wifi: locking control");
+
         let mut control = self.control.lock().await;
 
+        log::info!("Wifi: control locked");
+        log::info!("Wifi: joining access point");
+
+        let mut options = JoinOptions::new(password.as_bytes());
+        options.auth = JoinAuth::Wpa2;
+
         control
-            .join(
-                ssid,
-                JoinOptions::new(password.as_bytes()),
-            )
+            .join(ssid, options)
             .await?;
+
+        log::info!("Wifi: access point joined");
 
         drop(control);
 
+        log::info!("Wifi: waiting for link");
+
         self.stack.wait_link_up().await;
+
+        log::info!("Wifi: link up");
 
         Ok(())
     }
