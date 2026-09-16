@@ -6,3 +6,4 @@ authors.workspace = true
 license.workspace = true
 
 [dependencies]
+device = "0.0.4"

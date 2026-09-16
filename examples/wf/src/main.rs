@@ -9,14 +9,14 @@ use embassy_rp::bind_interrupts;
 use embassy_rp::peripherals::USB;
 use embassy_rp::usb::{Driver, InterruptHandler};
 use embassy_rp::watchdog::Watchdog;
-use embassy_time::{Duration, Timer};
-use capability::{Wifi};
+use embassy_time::{Timer};
 use rp235x::{
     Pico2wCyw43Resources, Rp235xCyw43, Rp235xFirmwareStorage, Rp235xOta,
     Rp235xUpdateSource,
 };
 use embedded_alloc::LlffHeap;
 use capability::l3::Ipv4NetworkDevice;
+use capability::Wifi;
 use debugger::Indicator;
 use rp235x::debugger::{Rp235xDebugger};
 use runtime_core::OtaStatus;
@@ -25,6 +25,11 @@ const CURRENT_VERSION: &str = match option_env!("B3_FIRMWARE_VERSION") {
     Some(version) => version,
     None => env!("CARGO_PKG_VERSION"),
 };
+
+// const WIFI_SSID: &str = env!("B3C_ALPHA_WIFI_SSID");
+const WIFI_SSID: &str = env!("DREAM_CORE_WIFI_SSID");
+// const WIFI_PASSWORD: &str = env!("B3C_ALPHA_WIFI_PASSWORD");
+const WIFI_PASSWORD: &str = env!("DREAM_CORE_WIFI_PASSWORD");
 
 const UPDATE_MANIFEST_URL: &str =
     "https://github.com/kmupdate1/b3-rust-iot/releases/latest/download/update-manifest.json";
@@ -84,7 +89,7 @@ async fn main(spawner: Spawner) {
     log::info!("main: connecting to Wi-Fi");
 
     let con = wifi
-        .connect("Buffalo-2G-8F20", "hrtsedgmndi6c")
+        .connect(WIFI_SSID, WIFI_PASSWORD)
         .await;
 
     if con.is_err() {
