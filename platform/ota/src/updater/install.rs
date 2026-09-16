@@ -28,14 +28,14 @@ where
     let mut offset = 0;
     while offset < size {
         let expected = core::cmp::min(write_size, size - offset);
-        let received = source
-            .read(
-                manifest.firmware_url.as_str(),
-                offset,
-                &mut buffer[..expected],
-            )
-            .await
-            .map_err(OtaError::Source)?;
+        let received = FirmwareSource::read(
+            source,
+            manifest.firmware_url.as_str(),
+            offset,
+            &mut buffer[..expected],
+        )
+        .await
+        .map_err(OtaError::Source)?;
         if received != expected {
             return Err(OtaError::FirmwareSizeMismatch {
                 expected,
