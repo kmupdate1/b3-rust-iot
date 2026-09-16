@@ -50,7 +50,7 @@ where
         &mut self,
         current_version: &str,
     ) -> Result<bool, OtaError<<Source as ManifestSource>::Error, <Target as FirmwareWriter>::Error>> {
-        let current = version::parser::parse(current_version)
+        let current = version::parse(current_version)
             .map_err(|_| OtaError::InvalidCurrentVersion)?;
         let mut buffer = [0; MANIFEST_BUFFER_SIZE];
         self.pending = check::for_update(&mut self.source, &current, &mut buffer).await?;
