@@ -1,16 +1,14 @@
 #![no_std]
 
-mod manifest;
-mod firmware;
 mod activation;
+mod firmware;
+mod manifest;
+mod updater;
 mod version;
 
-pub use manifest::*;
-pub use firmware::*;
 pub use activation::*;
-
-pub trait Ota {
-    type Error;
-
-    async fn update(&mut self) -> Result<(), Self::Error>;
-}
+pub use error::*;
+pub use firmware::*;
+pub use manifest::*;
+pub use updater::*;
+pub use version::*;

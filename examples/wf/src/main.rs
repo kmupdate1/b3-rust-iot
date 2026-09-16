@@ -2,33 +2,30 @@
 #![no_main]
 
 use core::default::Default;
+use capability::l3::Ipv4NetworkDevice;
+use capability::Wifi;
+use debugger::Indicator;
 use defmt_rtt as _;
-use panic_probe as _;
 use embassy_executor::Spawner;
 use embassy_rp::bind_interrupts;
 use embassy_rp::peripherals::USB;
 use embassy_rp::usb::{Driver, InterruptHandler};
 use embassy_rp::watchdog::Watchdog;
-use embassy_time::{Timer};
-use rp235x::{Pico2wCyw43Resources, Rp235xCyw43};
+use embassy_time::Timer;
 use embedded_alloc::LlffHeap;
-use capability::l3::Ipv4NetworkDevice;
-use capability::Wifi;
-use debugger::Indicator;
-use rp235x::debugger::{Rp235xDebugger};
-use rp235x::ota_old::{Rp235xFirmwareStorage, Rp235xOta, Rp235xUpdateSource};
-use runtime_core::OtaStatus;
+use ota::{UpdateOutcome, Updater};
+use panic_probe as _;
+use rp235x::debugger::Rp235xDebugger;
+use rp235x::{
+    Pico2wCyw43Resources, Rp235xCyw43, Rp235xFirmwareTarget, Rp235xUpdateSource,
+};
 
 const CURRENT_VERSION: &str = match option_env!("B3_FIRMWARE_VERSION") {
     Some(version) => version,
     None => env!("CARGO_PKG_VERSION"),
 };
-
-// const WIFI_SSID: &str = env!("B3C_ALPHA_WIFI_SSID");
 const WIFI_SSID: &str = env!("DREAM_CORE_WIFI_SSID");
-// const WIFI_PASSWORD: &str = env!("B3C_ALPHA_WIFI_PASSWORD");
 const WIFI_PASSWORD: &str = env!("DREAM_CORE_WIFI_PASSWORD");
-
 const UPDATE_MANIFEST_URL: &str =
     "https://github.com/kmupdate1/b3-rust-iot/releases/latest/download/update-manifest.json";
 
@@ -47,86 +44,46 @@ static HEAP: LlffHeap = LlffHeap::empty();
 #[embassy_executor::main]
 async fn main(spawner: Spawner) {
     let p = embassy_rp::init(Default::default());
-    // A tentative image inherits the bootloader watchdog. Keep it running
-    // until the board and network stack have initialized successfully.
     let mut watchdog = Watchdog::new(p.WATCHDOG);
 
     let usb_driver = Driver::new(p.USB, UsbIrqs);
     spawner.spawn(usb_logger_task(usb_driver).unwrap());
-
-    // Give macOS time to enumerate the USB serial device before startup logs.
     Timer::after_secs(2).await;
-    log::info!("main: example started");
 
     let nw_resources = Pico2wCyw43Resources::new(
-        p.PIN_23,
-        p.PIN_25,
-        p.PIN_24,
-        p.PIN_29,
-        p.PIO0,
-        p.DMA_CH0,
-        p.DMA_CH1,
+        p.PIN_23, p.PIN_25, p.PIN_24, p.PIN_29, p.PIO0, p.DMA_CH0, p.DMA_CH1,
     );
-
-    log::info!("main: n/w resources prepared");
-
-    let mut debugger = Rp235xDebugger::new(
-        p.PIN_0,
-        p.PIN_1,
-        p.PIN_2,
-    );
-
-    log::info!("main: n/w debugger activated");
-
+    let mut debugger = Rp235xDebugger::new(p.PIN_0, p.PIN_1, p.PIN_2);
     let network = Rp235xCyw43::new(nw_resources, spawner).await;
-
-    log::info!("main: n/w network activated");
-
     let mut wifi = network.wifi();
 
-    log::info!("main: connecting to Wi-Fi");
-
-    let con = wifi
-        .connect(WIFI_SSID, WIFI_PASSWORD)
-        .await;
-
-    if con.is_err() {
+    if wifi.connect(WIFI_SSID, WIFI_PASSWORD).await.is_err() {
         log::error!("Wi-Fi connect failed");
-
         debugger.indicator.red(true);
         return;
     }
+    let ipv4 = wifi.wait_ipv4_addr().await.unwrap();
+    log::info!("Wi-Fi connected: {:?}", ipv4);
 
-    let ipv4 = wifi
-        .wait_ipv4_addr()
-        .await
-        .unwrap();
+    let source = Rp235xUpdateSource::new(wifi.http(), UPDATE_MANIFEST_URL);
+    let target = Rp235xFirmwareTarget::new(p.FLASH);
+    let mut updater = Updater::new(source, target);
 
-    log::info!("Wi-Fi connected");
-    log::info!("  - Ipv4: {:?}", ipv4);
-
-    let source = Rp235xUpdateSource::new(wifi.http());
-    let storage = Rp235xFirmwareStorage::new(p.FLASH);
-    let mut updater = Rp235xOta::new(source, storage, UPDATE_MANIFEST_URL);
-
-    // Confirm a tentative image only after the board, Wi-Fi, and IPv4
-    // configuration have passed the minimum startup health check.
+    // The application owns the health policy; the target only persists it.
     if let Err(error) = updater.confirm_boot() {
         log::error!("updater: failed to confirm current firmware: {:?}", error);
         debugger.indicator.red(true);
         return;
     }
     watchdog.stop();
-
     debugger.indicator.green(true);
 
-    log::info!("updater: checking for update from {}", CURRENT_VERSION);
-    match runtime_core::check(&mut updater, CURRENT_VERSION).await {
-        Ok(OtaStatus::UpToDate) => {
+    match updater.check_and_update(CURRENT_VERSION).await {
+        Ok(UpdateOutcome::UpToDate) => {
             log::info!("updater: firmware is up to date");
             debugger.indicator.blue(true);
         }
-        Ok(OtaStatus::ReadyToReboot) => {
+        Ok(UpdateOutcome::ReadyToReboot) => {
             log::info!("updater: update verified; rebooting");
             debugger.indicator.blue(true);
             Timer::after_secs(1).await;

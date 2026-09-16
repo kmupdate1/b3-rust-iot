@@ -9,7 +9,6 @@ license.workspace = true
 capability = { path = "../../capability" }
 ota = { path = "../../platform/ota" }
 debugger = { path = "../../platform/debugger" }
-runtime-core = { path = "../../runtime/runtime-core" }
 
 embassy-rp = { workspace = true }
 embassy-net = { workspace = true, features = ["dhcpv4-hostname", "proto-ipv6", "slaac"] }

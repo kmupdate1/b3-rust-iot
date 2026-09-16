@@ -7,3 +7,4 @@ license.workspace = true
 
 [dependencies]
 capability = { path = "../../capability" }
+ota = { path = "../../platform/ota" }

@@ -26,6 +26,5 @@ ota = { path = "../../platform/ota" }
 debugger = { path = "../../platform/debugger" }
 field-edge = { path = "../../device/field-edge" }
 rp235x = { path = "../../implementation/rp235x" }
-runtime-core = { path = "../../runtime/runtime-core" }
 
 log = "0.4.33"

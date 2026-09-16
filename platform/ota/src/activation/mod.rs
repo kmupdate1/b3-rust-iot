@@ -1,1 +1,3 @@
-pub mod boot_state;
+mod boot_state;
+
+pub use boot_state::*;

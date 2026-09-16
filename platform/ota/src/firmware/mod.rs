@@ -1,7 +1,7 @@
 mod source;
-mod writer;
 mod verifier;
+mod writer;
 
 pub use source::*;
-pub use writer::*;
 pub use verifier::*;
+pub use writer::*;
