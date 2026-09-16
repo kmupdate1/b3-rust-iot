@@ -10,6 +10,9 @@ use capability::{Http, Wifi};
 use rp235x::{Pico2wCyw43Resources, Rp235xCyw43, Rp235xWifi};
 use embedded_alloc::LlffHeap;
 
+const WIFI_SSID: &str = env!("B3C_ALPHA_WIFI_SSID");
+const WIFI_PASSWORD: &str = env!("B3C_ALPHA_WIFI_PASSWORD");
+
 #[global_allocator]
 static HEAP: LlffHeap = LlffHeap::empty();
 
@@ -31,7 +34,7 @@ async fn main(spawner: Spawner) {
     let mut wifi = Rp235xWifi::new(&network);
 
     wifi
-        .connect("Buffalo-2G-8F20", "hrtsedgmndi6c")
+        .connect(WIFI_SSID, WIFI_PASSWORD)
         .await
         .unwrap();
 
