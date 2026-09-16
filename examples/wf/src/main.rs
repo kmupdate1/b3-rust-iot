@@ -47,6 +47,7 @@ static HEAP: LlffHeap = LlffHeap::empty();
 async fn main(spawner: Spawner) {
     let p = embassy_rp::init(Default::default());
     let mut watchdog = Watchdog::new(p.WATCHDOG);
+    watchdog.stop();
 
     let usb_driver = Driver::new(p.USB, UsbIrqs);
     spawner.spawn(usb_logger_task(usb_driver).unwrap());
@@ -88,7 +89,7 @@ async fn main(spawner: Spawner) {
         debugger.indicator.red(true);
         return;
     }
-    watchdog.stop();
+    // watchdog.stop();
     debugger.indicator.green(true);
 
     match updater.check_and_update(CURRENT_VERSION).await {

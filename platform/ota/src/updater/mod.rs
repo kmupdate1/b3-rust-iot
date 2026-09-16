@@ -40,27 +40,59 @@ where
     pub fn confirm_boot(
         &mut self,
     ) -> Result<(), OtaError<<Source as ManifestSource>::Error, <Target as FirmwareStorage>::Error>> {
-        self.target.confirm_boot().map_err(OtaError::Target)
+        self
+            .target
+            .confirm_boot()
+            .map_err(OtaError::Target)
     }
 
     pub async fn check(
         &mut self,
         current_version: &str,
     ) -> Result<bool, OtaError<<Source as ManifestSource>::Error, <Target as FirmwareStorage>::Error>> {
+        log::info!("updater: current version: {}", current_version);
+        log::info!("updater: checking for update");
+
         let current = version::parse(current_version)
             .map_err(|_| OtaError::InvalidCurrentVersion)?;
+
         let mut buffer = [0; MANIFEST_BUFFER_SIZE];
+
         self.pending = check::for_update(&mut self.source, &current, &mut buffer).await?;
-        Ok(self.pending.is_some())
+
+        // Ok(self.pending.is_some())
+        if let Some(manifest) = &self.pending {
+            log::info!("updater: new version available: {:?}", manifest.version);
+            Ok(true)
+        } else {
+            log::info!("updater: no update available");
+            Ok(false)
+        }
     }
 
     pub async fn update(
         &mut self,
     ) -> Result<(), OtaError<<Source as ManifestSource>::Error, <Target as FirmwareStorage>::Error>> {
-        let manifest = self.pending.as_ref().ok_or(OtaError::NoPendingUpdate)?;
+        let manifest = self
+            .pending
+            .as_ref()
+            .ok_or(OtaError::NoPendingUpdate)?;
+
+        log::info!("updater: updating firmware");
+
         let mut buffer = [0; DOWNLOAD_BUFFER_SIZE];
-        install::firmware(&mut self.source, &mut self.target, manifest, &mut buffer).await?;
+
+        install::firmware(
+            &mut self.source,
+            &mut self.target,
+            manifest,
+            &mut buffer
+        ).await?;
+
+        log::info!("updater: firmware downloaded/install completed");
+
         self.pending = None;
+
         Ok(())
     }
 
@@ -68,10 +100,14 @@ where
         &mut self,
         current_version: &str,
     ) -> Result<UpdateOutcome, OtaError<<Source as ManifestSource>::Error, <Target as FirmwareStorage>::Error>> {
-        if !self.check(current_version).await? {
-            return Ok(UpdateOutcome::UpToDate);
-        }
-        self.update().await?;
+        if !self
+            .check(current_version)
+            .await? { return Ok(UpdateOutcome::UpToDate); }
+
+        self
+            .update()
+            .await?;
+
         Ok(UpdateOutcome::ReadyToReboot)
     }
 }

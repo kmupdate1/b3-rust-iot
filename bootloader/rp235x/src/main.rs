@@ -23,7 +23,7 @@ fn main() -> ! {
     let config = BootLoaderConfig::from_linkerfile_blocking(&flash, &flash, &flash);
     let active_offset = config.active.offset();
     let bootloader: BootLoader = BootLoader::prepare(config);
-
+    
     unsafe {
         bootloader.load(embassy_rp::flash::FLASH_BASE as u32 + active_offset)
     }
