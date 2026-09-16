@@ -11,6 +11,7 @@ ota = { path = "../../platform/ota" }
 debugger = { path = "../../platform/debugger" }
 
 embassy-rp = { workspace = true }
+embassy-embedded-hal = { workspace = true }
 embassy-net = { workspace = true, features = ["dhcpv4-hostname", "proto-ipv6", "slaac"] }
 embassy-executor = { workspace = true }
 embassy-sync = { workspace = true }

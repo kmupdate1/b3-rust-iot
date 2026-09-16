@@ -5,8 +5,7 @@ mod install;
 pub use error::*;
 
 use crate::{
-    version, BootState, FirmwareSource, FirmwareVerifier, FirmwareWriter, ManifestSource,
-    UpdateManifest,
+    version, BootState, FirmwareSource, FirmwareStorage, ManifestSource, UpdateManifest,
 };
 
 const MANIFEST_BUFFER_SIZE: usize = 16 * 1024;
@@ -36,20 +35,18 @@ impl<Source, Target> Updater<Source, Target>
 where
     Source: ManifestSource
         + FirmwareSource<Error = <Source as ManifestSource>::Error>,
-    Target: FirmwareWriter
-        + FirmwareVerifier<Error = <Target as FirmwareWriter>::Error>
-        + BootState<Error = <Target as FirmwareWriter>::Error>,
+    Target: FirmwareStorage + BootState<Error = <Target as FirmwareStorage>::Error>,
 {
     pub fn confirm_boot(
         &mut self,
-    ) -> Result<(), OtaError<<Source as ManifestSource>::Error, <Target as FirmwareWriter>::Error>> {
+    ) -> Result<(), OtaError<<Source as ManifestSource>::Error, <Target as FirmwareStorage>::Error>> {
         self.target.confirm_boot().map_err(OtaError::Target)
     }
 
     pub async fn check(
         &mut self,
         current_version: &str,
-    ) -> Result<bool, OtaError<<Source as ManifestSource>::Error, <Target as FirmwareWriter>::Error>> {
+    ) -> Result<bool, OtaError<<Source as ManifestSource>::Error, <Target as FirmwareStorage>::Error>> {
         let current = version::parse(current_version)
             .map_err(|_| OtaError::InvalidCurrentVersion)?;
         let mut buffer = [0; MANIFEST_BUFFER_SIZE];
@@ -59,7 +56,7 @@ where
 
     pub async fn update(
         &mut self,
-    ) -> Result<(), OtaError<<Source as ManifestSource>::Error, <Target as FirmwareWriter>::Error>> {
+    ) -> Result<(), OtaError<<Source as ManifestSource>::Error, <Target as FirmwareStorage>::Error>> {
         let manifest = self.pending.as_ref().ok_or(OtaError::NoPendingUpdate)?;
         let mut buffer = [0; DOWNLOAD_BUFFER_SIZE];
         install::firmware(&mut self.source, &mut self.target, manifest, &mut buffer).await?;
@@ -70,7 +67,7 @@ where
     pub async fn check_and_update(
         &mut self,
         current_version: &str,
-    ) -> Result<UpdateOutcome, OtaError<<Source as ManifestSource>::Error, <Target as FirmwareWriter>::Error>> {
+    ) -> Result<UpdateOutcome, OtaError<<Source as ManifestSource>::Error, <Target as FirmwareStorage>::Error>> {
         if !self.check(current_version).await? {
             return Ok(UpdateOutcome::UpToDate);
         }
