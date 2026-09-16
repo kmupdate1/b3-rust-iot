@@ -1,4 +1,4 @@
-pub mod parser;
+mod parser;
 
 use core::cmp::Ordering;
 use heapless::String;
