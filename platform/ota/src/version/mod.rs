@@ -1,5 +1,7 @@
 mod parser;
 
+pub(crate) use parser::parse;
+
 use core::cmp::Ordering;
 use heapless::String;
 
