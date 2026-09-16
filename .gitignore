@@ -1,4 +1,5 @@
 target/
+exportToHTML/
 
 *.uf2
 firmware.bin

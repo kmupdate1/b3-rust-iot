@@ -10,15 +10,13 @@ use embassy_rp::peripherals::USB;
 use embassy_rp::usb::{Driver, InterruptHandler};
 use embassy_rp::watchdog::Watchdog;
 use embassy_time::{Timer};
-use rp235x::{
-    Pico2wCyw43Resources, Rp235xCyw43, Rp235xFirmwareStorage, Rp235xOta,
-    Rp235xUpdateSource,
-};
+use rp235x::{Pico2wCyw43Resources, Rp235xCyw43};
 use embedded_alloc::LlffHeap;
 use capability::l3::Ipv4NetworkDevice;
 use capability::Wifi;
 use debugger::Indicator;
 use rp235x::debugger::{Rp235xDebugger};
+use rp235x::ota_old::{Rp235xFirmwareStorage, Rp235xOta, Rp235xUpdateSource};
 use runtime_core::OtaStatus;
 
 const CURRENT_VERSION: &str = match option_env!("B3_FIRMWARE_VERSION") {

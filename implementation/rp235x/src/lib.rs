@@ -5,6 +5,7 @@ pub mod board;
 pub mod network;
 pub mod network_device;
 pub mod ota;
+pub mod ota_old;
 pub mod peripherals;
 // pub mod error;
 // pub mod connection;
