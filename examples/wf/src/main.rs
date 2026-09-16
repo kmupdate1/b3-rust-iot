@@ -24,8 +24,10 @@ const CURRENT_VERSION: &str = match option_env!("B3_FIRMWARE_VERSION") {
     Some(version) => version,
     None => env!("CARGO_PKG_VERSION"),
 };
-const WIFI_SSID: &str = env!("DREAM_CORE_WIFI_SSID");
-const WIFI_PASSWORD: &str = env!("DREAM_CORE_WIFI_PASSWORD");
+
+const WIFI_SSID: &str = env!("B3C_ALPHA_WIFI_SSID");
+const WIFI_PASSWORD: &str = env!("B3C_ALPHA_WIFI_PASSWORD");
+
 const UPDATE_MANIFEST_URL: &str =
     "https://github.com/kmupdate1/b3-rust-iot/releases/latest/download/update-manifest.json";
 
@@ -53,16 +55,27 @@ async fn main(spawner: Spawner) {
     let nw_resources = Pico2wCyw43Resources::new(
         p.PIN_23, p.PIN_25, p.PIN_24, p.PIN_29, p.PIO0, p.DMA_CH0, p.DMA_CH1,
     );
+
     let mut debugger = Rp235xDebugger::new(p.PIN_0, p.PIN_1, p.PIN_2);
+
     let network = Rp235xCyw43::new(nw_resources, spawner).await;
+
     let mut wifi = network.wifi();
 
-    if wifi.connect(WIFI_SSID, WIFI_PASSWORD).await.is_err() {
+    if wifi
+        .connect(WIFI_SSID, WIFI_PASSWORD)
+        .await
+        .is_err() {
         log::error!("Wi-Fi connect failed");
         debugger.indicator.red(true);
         return;
     }
-    let ipv4 = wifi.wait_ipv4_addr().await.unwrap();
+
+    let ipv4 = wifi
+        .wait_ipv4_addr()
+        .await
+        .unwrap();
+
     log::info!("Wi-Fi connected: {:?}", ipv4);
 
     let source = Rp235xUpdateSource::new(wifi.http(), UPDATE_MANIFEST_URL);

@@ -1465,6 +1465,7 @@ name = "embassy-embedded-hal"
 version = "0.6.0"
 source = "git+https://github.com/embassy-rs/embassy?rev=d945e092eb757955bc37a55c2c6e297df51bfcde#d945e092eb757955bc37a55c2c6e297df51bfcde"
 dependencies = [
+ "defmt 1.1.1",
  "embassy-futures",
  "embassy-hal-internal",
  "embassy-sync 0.8.0 (git+https://github.com/embassy-rs/embassy?rev=d945e092eb757955bc37a55c2c6e297df51bfcde)",
@@ -4581,6 +4582,7 @@ dependencies = [
  "cyw43-pio",
  "debugger",
  "embassy-boot-rp",
+ "embassy-embedded-hal",
  "embassy-executor",
  "embassy-net 0.9.1",
  "embassy-rp",
@@ -4592,7 +4594,6 @@ dependencies = [
  "log",
  "ota",
  "reqwless",
- "runtime-core",
  "serde",
  "serde-json-core",
  "sha2",
@@ -4616,6 +4617,7 @@ name = "runtime-core"
 version = "0.1.0"
 dependencies = [
  "capability",
+ "ota",
 ]
 
 [[package]]
@@ -6097,7 +6099,6 @@ dependencies = [
  "panic-probe",
  "pump",
  "rp235x",
- "runtime-core",
 ]
 
 [[package]]
