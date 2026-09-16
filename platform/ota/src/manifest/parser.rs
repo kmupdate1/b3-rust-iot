@@ -33,7 +33,7 @@ pub fn json(data: &[u8]) -> Result<UpdateManifest, ManifestError> {
         .map_err(|_| ManifestError::FieldTooLong)?;
 
     Ok(UpdateManifest {
-        version: version::parser::parse(wire.version)?,
+        version: version::parse(wire.version)?,
         firmware_url: location,
         size,
         digest: FirmwareDigest::from_hex(sha256)?,
