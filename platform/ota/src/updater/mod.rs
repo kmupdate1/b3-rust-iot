@@ -62,7 +62,7 @@ where
 
         // Ok(self.pending.is_some())
         if let Some(manifest) = &self.pending {
-            log::info!("updater: new version available: {:?}", manifest.version);
+            log::info!("updater: new version available: {}", manifest.version);
             Ok(true)
         } else {
             log::info!("updater: no update available");

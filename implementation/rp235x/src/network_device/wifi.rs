@@ -6,7 +6,7 @@ use cyw43::{Control, JoinAuth, JoinOptions};
 use embassy_net::Stack;
 use embassy_sync::blocking_mutex::raw::ThreadModeRawMutex;
 use embassy_sync::mutex::Mutex;
-use embassy_time::{with_timeout, Duration, Timer};
+use embassy_time::Timer;
 
 pub struct Rp235xWifi<'a> {
     control: &'a Mutex<ThreadModeRawMutex, Control<'static>>,

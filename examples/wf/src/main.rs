@@ -54,7 +54,7 @@ async fn main(spawner: Spawner) {
 
     Timer::after_secs(2).await;
 
-    log::info!("BOOT: Via USB installed binary launched");
+    log::info!("BOOT: Via 'USB' installed binary launched");
     log::info!("BOOT: firmware={}", CURRENT_VERSION);
     log::info!("BOOT: watchdog stopped");
 
@@ -103,9 +103,18 @@ async fn main(spawner: Spawner) {
             debugger.indicator.blue(true);
         }
         Ok(UpdateOutcome::ReadyToReboot) => {
-            log::info!("updater: update verified; rebooting");
             debugger.indicator.blue(true);
             Timer::after_secs(1).await;
+            log::info!("updater: update verified");
+
+            log::info!("updater: wifi disconnecting before reboot");
+            match wifi.disconnect().await {
+                Ok(()) => log::info!("wifi disconnected"),
+                Err(error) => log::error!("wifi: disconnecting failed: {:?}", error),
+            }
+
+            debugger.indicator.blue(false);
+            log::info!("updater: rebooting...");
             cortex_m::peripheral::SCB::sys_reset();
         }
         Err(error) => {
