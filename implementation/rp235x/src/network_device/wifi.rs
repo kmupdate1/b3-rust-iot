@@ -6,7 +6,7 @@ use cyw43::{Control, JoinAuth, JoinOptions};
 use embassy_net::Stack;
 use embassy_sync::blocking_mutex::raw::ThreadModeRawMutex;
 use embassy_sync::mutex::Mutex;
-use embassy_time::Timer;
+use embassy_time::{with_timeout, Duration, Timer};
 
 pub struct Rp235xWifi<'a> {
     control: &'a Mutex<ThreadModeRawMutex, Control<'static>>,
@@ -81,28 +81,27 @@ impl Ipv6NetworkDevice for Rp235xWifi<'_> {
 impl Wifi for Rp235xWifi<'_> {
     async fn connect(&mut self, ssid: &str, password: &str) -> Result<(), Self::Error> {
         log::info!("Wifi: locking control");
-
         let mut control = self.control.lock().await;
-
         log::info!("Wifi: control locked");
         log::info!("Wifi: joining access point");
 
         let mut options = JoinOptions::new(password.as_bytes());
+        log::info!("Wifi: Join point prepared");
+
         options.auth = JoinAuth::Wpa2;
+        log::info!("Wifi: wpa2 auth applied");
+
 
         control
             .join(ssid, options)
             .await?;
-
         log::info!("Wifi: access point joined");
 
         drop(control);
 
         log::info!("Wifi: waiting for link");
-
         self.stack.wait_link_up().await;
-
-        log::info!("Wifi: link up");
+        log::info!("Wifi: succeeded to link up");
 
         Ok(())
     }

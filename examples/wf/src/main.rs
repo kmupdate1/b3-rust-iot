@@ -51,7 +51,12 @@ async fn main(spawner: Spawner) {
 
     let usb_driver = Driver::new(p.USB, UsbIrqs);
     spawner.spawn(usb_logger_task(usb_driver).unwrap());
+
     Timer::after_secs(2).await;
+
+    log::info!("BOOT: Via USB installed binary launched");
+    log::info!("BOOT: firmware={}", CURRENT_VERSION);
+    log::info!("BOOT: watchdog stopped");
 
     let nw_resources = Pico2wCyw43Resources::new(
         p.PIN_23, p.PIN_25, p.PIN_24, p.PIN_29, p.PIO0, p.DMA_CH0, p.DMA_CH1,

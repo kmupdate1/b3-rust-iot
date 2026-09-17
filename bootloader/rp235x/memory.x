@@ -1,35 +1,39 @@
+INCLUDE flash.x
+
 MEMORY {
-  FLASH            : ORIGIN = 0x10000000, LENGTH = 128K
-  BOOTLOADER_STATE : ORIGIN = 0x10020000, LENGTH = 4K
-  ACTIVE           : ORIGIN = 0x10021000, LENGTH = 1980K
-  DFU              : ORIGIN = ORIGIN(ACTIVE) + LENGTH(ACTIVE), LENGTH = 1984K
-  RAM              : ORIGIN = 0x20000000, LENGTH = 512K
+    /* Bootloader executable parttion */
+    FLASH            : ORIGIN = BOOTLOADER_ORIGIN, LENGTH = BOOTLOADER_LENGTH
+    BOOTLOADER_STATE : ORIGIN = BOOTLOADER_STATE_ORIGIN, LENGTH = BOOTLOADER_STATE_LENGTH
+    ACTIVE           : ORIGIN = ACTIVE_ORIGIN, LENGTH = ACTIVE_LENGTH
+    DFU              : ORIGIN = DFU_ORIGIN, LENGTH = DFU_LENGTH
+
+    RAM              : ORIGIN = 0x20000000, LENGTH = 512K
 }
 
 SECTIONS {
-  .start_block : ALIGN(4) {
+    .start_block : ALIGN(4) {
     __start_block_addr = .;
     KEEP(*(.start_block));
     KEEP(*(.boot_info));
-  } > FLASH
+    } > FLASH
 } INSERT AFTER .vector_table;
 
 _stext = ADDR(.start_block) + SIZEOF(.start_block);
 
 SECTIONS {
-  .bi_entries : ALIGN(4) {
+    .bi_entries : ALIGN(4) {
     __bi_entries_start = .;
     KEEP(*(.bi_entries));
     . = ALIGN(4);
     __bi_entries_end = .;
-  } > FLASH
+    } > FLASH
 } INSERT AFTER .text;
 
 SECTIONS {
-  .end_block : ALIGN(4) {
+    .end_block : ALIGN(4) {
     __end_block_addr = .;
     KEEP(*(.end_block));
-  } > FLASH
+    } > FLASH
 } INSERT AFTER .uninit;
 
 PROVIDE(start_to_end = __end_block_addr - __start_block_addr);

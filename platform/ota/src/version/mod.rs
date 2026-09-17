@@ -3,6 +3,7 @@ mod parser;
 pub(crate) use parser::parse;
 
 use core::cmp::Ordering;
+use core::fmt;
 use heapless::String;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -23,6 +24,22 @@ impl Version {
         (self.major, self.minor, self.patch)
             .cmp(&(other.major, other.minor, other.patch))
             .then_with(|| compare_pre_release(self.pre.as_deref(), other.pre.as_deref()))
+    }
+}
+
+impl fmt::Display for Version {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}.{}.{}", self.major, self.minor, self.patch)?;
+
+        if let Some(pre) = &self.pre {
+            write!(f, "-{pre}")?;
+        }
+
+        if let Some(build) = &self.build {
+            write!(f, "+{build}")?;
+        }
+
+        Ok(())
     }
 }
 

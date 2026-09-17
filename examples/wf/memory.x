@@ -1,15 +1,24 @@
+INCLUDE flash.x
+
 MEMORY {
-    FLASH_ZERO       : ORIGIN = 0x10000000, LENGTH = 0
-    BOOTLOADER       : ORIGIN = 0x10000000, LENGTH = 128K
-    BOOTLOADER_STATE : ORIGIN = 0x10020000, LENGTH = 4K
-    FLASH            : ORIGIN = 0x10021000, LENGTH = 1980K
-    DFU              : ORIGIN = ORIGIN(FLASH) + LENGTH(FLASH), LENGTH = 1984K
+    /* Flash start point */
+    FLASH_ZERO       : ORIGIN = FLASH_BASE, LENGTH = 0
+
+    /* Bootloader executable partition */
+    BOOTLOADER       : ORIGIN = BOOTLOADER_ORIGIN, LENGTH = BOOTLOADER_LENGTH
+    BOOTLOADER_STATE : ORIGIN = BOOTLOADER_STATE_ORIGIN, LENGTH = BOOTLOADER_STATE_LENGTH
+
+    /* Application executable partition */
+    FLASH            : ORIGIN = ACTIVE_ORIGIN, LENGTH = ACTIVE_LENGTH
+    DFU              : ORIGIN = DFU_ORIGIN, LENGTH = DFU_LENGTH
+
     /*
      * RAM consists of 8 banks, SRAM0-SRAM7, with a striped mapping.
      * This is usually good for performance, as it distributes load on
      * those banks evenly.
      */
     RAM : ORIGIN = 0x20000000, LENGTH = 512K
+
     /*
      * RAM banks 8 and 9 use a direct mapping. They can be used to have
      * memory areas dedicated for some specific job, improving predictability

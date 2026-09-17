@@ -3,8 +3,6 @@ use crate::{
     OtaError, UpdateManifest,
 };
 
-const PROGRESS_LOG_INTERVAL: usize = 64 * 1024;
-
 pub(super) async fn firmware<Source, Target>(
     source: &mut Source,
     target: &mut Target,
@@ -18,7 +16,8 @@ where
 {
     let size = manifest.size as usize;
 
-    log::info!("updater/install: firmware: firmware size: {} KiB", (size + 1023) / 1024);
+    let total = (size + 1023) / 1024;
+    log::info!("updater/install: firmware: firmware size: {} KiB", total);
 
     let mut writer = target.writer().map_err(OtaError::Target)?;
     let capacity = writer.capacity();
@@ -34,7 +33,7 @@ where
     log::info!("updater/install: firmware: writing {} bytes", write_size);
 
     let mut offset = 0;
-    let mut next_progress = PROGRESS_LOG_INTERVAL;
+    let mut next_progress = usize::MAX;
 
     while offset < size {
         let expected = core::cmp::min(write_size, size - offset);
@@ -58,17 +57,17 @@ where
 
         offset += received;
 
-        if offset >= next_progress || offset == size {
-            let percent = offset * 100 / size;
+        let progress = offset * 100 / size;
 
+        if progress != next_progress {
             log::info!(
-                "updater/install: downloading: {} / {} KiB ({}%)",
-                offset / 1024,
-                (size + 1023) / 1024,
-                percent
+                "\rupdater/install: downloading: {} / {} KiB ({}%)",
+                offset,
+                total,
+                progress,
             );
 
-            next_progress += PROGRESS_LOG_INTERVAL;
+            next_progress = progress;
         }
     }
 

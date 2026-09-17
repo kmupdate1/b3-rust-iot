@@ -27,20 +27,26 @@ impl Rp235xCyw43 {
         let mut rng = RoscRng;
         let seed = rng.next_u64();
 
+        log::info!("Cyw43: firmware initializing, seed is {}", seed);
         let bus = bus::init(resources);
         let mut fw = firmware::init(bus).await;
 
+        log::info!("Cyw43: spawning runner");
         spawner
             .spawn(runner::cyw43_task(fw.runner).unwrap());
 
+        log::info!("Cyw43: configuring control");
         firmware::control(&mut fw.control).await;
 
+        log::info!("Cyw43: network initializing");
         let (stack, net_runner) =
             network::init(fw.net_device, seed);
 
+        log::info!("Cyw43: spawning network runner");
         spawner
             .spawn(network::net_task(net_runner).unwrap());
 
+        log::info!("Cyw43: ready");
         Self {
             control: Mutex::new(fw.control),
             stack,
