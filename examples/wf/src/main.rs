@@ -94,6 +94,7 @@ async fn main(spawner: Spawner) {
         debugger.indicator.red(true);
         return;
     }
+
     // watchdog.stop();
     debugger.indicator.green(true);
 
@@ -102,6 +103,7 @@ async fn main(spawner: Spawner) {
             log::info!("updater: firmware is up to date");
             debugger.indicator.blue(true);
         }
+
         Ok(UpdateOutcome::ReadyToReboot) => {
             debugger.indicator.blue(true);
             Timer::after_secs(1).await;
@@ -117,6 +119,7 @@ async fn main(spawner: Spawner) {
             log::info!("updater: rebooting...");
             cortex_m::peripheral::SCB::sys_reset();
         }
+
         Err(error) => {
             log::error!("updater: update failed: {:?}", error);
             debugger.indicator.red(true);
