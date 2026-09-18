@@ -1,7 +1,6 @@
-pub mod http;
-pub mod tcp;
-pub mod udp;
+pub mod device;
+pub mod ip;
 
-pub use http::*;
-pub use tcp::*;
-pub use udp::*;
+pub use ip::l7::http::*;
+pub use ip::l4::tcp::*;
+pub use ip::l4::udp::*;

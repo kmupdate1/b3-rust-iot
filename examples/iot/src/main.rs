@@ -12,9 +12,10 @@ use log::warn;
 use field_edge::{composePin0, composePin1};
 use capability::{AnalogReader, IntoDigitalOutput, Wifi};
 use rp235x::analog::{AdcPin26, Rp235xAdc};
-use rp235x::{Pico2wCyw43Resources, Pin0, Pin1, Pin10, Pin11, Pin12, Pin26, Rp235xBluetooth, Rp235xCyw43, Rp235xWifi};
+use rp235x::{Pico2wCyw43Resources, Pin0, Pin1, Pin10, Pin11, Pin12, Pin26};
 use embedded_alloc::LlffHeap;
 use mux::Mux;
+use rp235x::device::cyw43::Rp235xCyw43;
 
 #[global_allocator]
 static HEAP: LlffHeap = LlffHeap::empty();

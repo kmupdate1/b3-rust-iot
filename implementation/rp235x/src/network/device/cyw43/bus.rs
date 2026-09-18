@@ -10,12 +10,12 @@ bind_interrupts!(struct Irqs {
     DMA_IRQ_0 => dma::InterruptHandler<DMA_CH0>, dma::InterruptHandler<DMA_CH1>;
 });
 
-pub(super) struct Bus {
+pub(crate) struct Bus {
     pub pwr: Output<'static>,
     pub spi: PioSpi<'static, PIO0, 0>,
 }
 
-pub(super) fn init(
+pub(crate) fn init(
     resources: Pico2wCyw43Resources<'static>,
 ) -> Bus {
     let pwr = Output::new(resources.pwr, Level::Low);

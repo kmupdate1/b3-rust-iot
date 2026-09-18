@@ -1,6 +1,7 @@
 target/
 exportToHTML/
 
+*.mmd
 *.uf2
 firmware.bin
 update-manifest.json

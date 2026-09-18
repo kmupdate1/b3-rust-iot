@@ -4,7 +4,7 @@ use embassy_rp::gpio::Output;
 use embassy_rp::peripherals::PIO0;
 
 #[embassy_executor::task]
-pub(super) async fn cyw43_task(
+pub(crate) async fn cyw43_task(
     runner: Runner<
         'static,
         SpiBus<Output<'static>, PioSpi<'static, PIO0, 0>>,

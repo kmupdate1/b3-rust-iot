@@ -10,8 +10,9 @@ use embassy_net::Stack;
 use embassy_rp::clocks::RoscRng;
 use embassy_sync::blocking_mutex::raw::ThreadModeRawMutex;
 use embassy_sync::mutex::Mutex;
-use crate::{Pico2wCyw43Resources, Rp235xBluetooth};
-use crate::wifi::Rp235xWifi;
+use crate::Pico2wCyw43Resources;
+use crate::device::bluetooth::Rp235xBluetooth;
+use crate::network::device::wifi::Rp235xWifi;
 
 pub struct Rp235xCyw43 {
     control: Mutex<ThreadModeRawMutex, Control<'static>>,

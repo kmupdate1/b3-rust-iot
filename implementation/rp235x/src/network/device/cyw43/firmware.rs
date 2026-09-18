@@ -4,11 +4,11 @@ use cyw43_pio::PioSpi;
 use embassy_rp::gpio::Output;
 use embassy_rp::peripherals::PIO0;
 use static_cell::StaticCell;
-use crate::cyw43::bus::Bus;
+use crate::network::device::cyw43::bus::Bus;
 
 static STATE: StaticCell<cyw43::State> = StaticCell::new();
 
-pub(super) struct Firmware {
+pub(crate) struct Firmware {
     pub net_device: NetDriver<'static>,
     pub bluetooth: BtDriver<'static>,
     pub control: Control<'static>,
@@ -19,10 +19,10 @@ pub(super) struct Firmware {
     >,
 }
 
-pub(super) async fn init(bus: Bus) -> Firmware {
-    let fw = aligned_bytes!("../../../firmware/43439A0.bin");
-    let btfw = aligned_bytes!("../../../firmware/43439A0_btfw.bin");
-    let nvram = aligned_bytes!("../../../firmware/nvram_rp2040.bin");
+pub(crate) async fn init(bus: Bus) -> Firmware {
+    let fw = aligned_bytes!("../../../../firmware/43439A0.bin");
+    let btfw = aligned_bytes!("../../../../firmware/43439A0_btfw.bin");
+    let nvram = aligned_bytes!("../../../../firmware/nvram_rp2040.bin");
 
     let state = STATE.init(cyw43::State::new());
 
@@ -44,10 +44,10 @@ pub(super) async fn init(bus: Bus) -> Firmware {
     }
 }
 
-pub(super) async fn control(
+pub(crate) async fn control(
     control: &mut Control<'static>,
 ) {
-    let clm = aligned_bytes!("../../../firmware/43439A0_clm.bin");
+    let clm = aligned_bytes!("../../../../firmware/43439A0_clm.bin");
 
     control.init(clm).await;
 

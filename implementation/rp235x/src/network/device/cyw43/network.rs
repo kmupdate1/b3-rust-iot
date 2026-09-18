@@ -5,14 +5,14 @@ use static_cell::StaticCell;
 static RESOURCES: StaticCell<StackResources<3>> = StaticCell::new();
 
 #[embassy_executor::task]
-pub(super) async fn net_task(
+pub(crate) async fn net_task(
     mut runner: Runner<
         'static,
         NetDriver<'static>,
     >,
 ) -> ! { runner.run().await; }
 
-pub(super) fn init(
+pub(crate) fn init(
     net_device: NetDriver<'static>,
     seed: u64,
 ) -> (

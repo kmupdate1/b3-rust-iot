@@ -16,9 +16,8 @@ use embedded_alloc::LlffHeap;
 use ota::{UpdateOutcome, Updater};
 use panic_probe as _;
 use rp235x::debugger::Rp235xDebugger;
-use rp235x::{
-    Pico2wCyw43Resources, Rp235xCyw43, Rp235xFirmwareTarget, Rp235xUpdateSource,
-};
+use rp235x::{Pico2wCyw43Resources, Rp235xFirmwareTarget, Rp235xUpdateSource};
+use rp235x::device::cyw43::Rp235xCyw43;
 
 const CURRENT_VERSION: &str = match option_env!("B3_FIRMWARE_VERSION") {
     Some(version) => version,
