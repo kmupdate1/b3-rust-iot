@@ -35,9 +35,8 @@ impl FirmwareSource for Rp235xUpdateSource {
         offset: usize,
         buffer: &mut [u8],
     ) -> Result<usize, Self::Error> {
-        if buffer.is_empty() {
-            return Ok(0);
-        }
+        if buffer.is_empty() { return Ok(0); }
+
         self.http
             .get_range(location, offset, offset + buffer.len() - 1, buffer)
             .await

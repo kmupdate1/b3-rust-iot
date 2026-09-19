@@ -100,6 +100,8 @@
       <sourceFolder url="file://$MODULE_DIR$/platform/ota/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/implementation/vendor/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/implementation/vendor/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/runtime/core/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/runtime/core/tests" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/embassy/embassy-executor/target" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/embassy/embassy-rp/target" />

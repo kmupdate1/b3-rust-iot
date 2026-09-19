@@ -2111,10 +2111,6 @@ dependencies = [
 [[package]]
 name = "runtime-core"
 version = "0.1.0"
-dependencies = [
- "capability",
- "ota",
-]
 
 [[package]]
 name = "rustc_version"

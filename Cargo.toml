@@ -2,7 +2,9 @@
 resolver = "3"
 members = [
     "bootloader/rp235x",
-    "runtime/runtime-core",
+
+    "runtime/core",
+
     "capability",
     #"point",
     "implementation/rp235x",
