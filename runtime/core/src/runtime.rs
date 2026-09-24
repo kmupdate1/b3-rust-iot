@@ -1,5 +1,8 @@
-use core::marker::PhantomData;
+use crate::command::Termination;
 use crate::lifecycle::{Lifecycle, OnCreat, OnDestroy, OnPrepare, OnResume, OnStart, OnStop, OnSuspend};
+use core::marker::PhantomData;
+use crate::outcome::ApplicationOutcome;
+use crate::run::Run;
 
 pub struct Uninitialized;
 pub struct Created;
@@ -26,7 +29,7 @@ impl<A> Runtime<Uninitialized, A>
 where
     A: OnCreat,
 {
-    pub async fn create(mut self) -> Result<Runtime<Created, A>, <A as Lifecycle>::Error> {
+    async fn create(mut self) -> Result<Runtime<Created, A>, <A as Lifecycle>::Error> {
         self.application.on_create().await?;
 
         Ok(Runtime {
@@ -40,7 +43,7 @@ impl<A> Runtime<Created, A>
 where
     A: OnPrepare,
 {
-    pub async fn prepare(mut self) -> Result<Runtime<Prepared, A>, <A as Lifecycle>::Error> {
+    async fn prepare(mut self) -> Result<Runtime<Prepared, A>, <A as Lifecycle>::Error> {
         self.application.on_prepare().await?;
 
         Ok(Runtime{
@@ -54,7 +57,7 @@ impl<A> Runtime<Prepared, A>
 where
     A: OnStart,
 {
-    pub async fn start(mut self) -> Result<Runtime<Running, A>, <A as Lifecycle>::Error> {
+    async fn start(mut self) -> Result<Runtime<Running, A>, <A as Lifecycle>::Error> {
         self.application.on_start().await?;
 
         Ok(Runtime{
@@ -68,7 +71,7 @@ impl<A> Runtime<Running, A>
 where
     A: OnStop,
 {
-    pub async fn stop(mut self) -> Result<Runtime<Stopped, A>, <A as Lifecycle>::Error> {
+    async fn stop(mut self) -> Result<Runtime<Stopped, A>, <A as Lifecycle>::Error> {
         self.application.on_stop().await?;
 
         Ok(Runtime{
@@ -82,7 +85,7 @@ impl<A> Runtime<Running, A>
 where
     A: OnSuspend,
 {
-    pub async fn suspend(mut self) -> Result<Runtime<Suspended, A>, <A as Lifecycle>::Error> {
+    async fn suspend(mut self) -> Result<Runtime<Suspended, A>, <A as Lifecycle>::Error> {
         self.application.on_suspend().await?;
 
         Ok(Runtime {
@@ -96,7 +99,7 @@ impl<A> Runtime<Suspended, A>
 where
     A: OnResume,
 {
-    pub async fn resume(mut self) -> Result<Runtime<Running, A>, <A as Lifecycle>::Error> {
+    async fn resume(mut self) -> Result<Runtime<Running, A>, <A as Lifecycle>::Error> {
         self.application.on_resume().await?;
 
         Ok(Runtime {
@@ -110,7 +113,7 @@ impl<A> Runtime<Suspended, A>
 where
     A: OnStop,
 {
-    pub async fn stop(mut self) -> Result<Runtime<Stopped, A>, <A as Lifecycle>::Error> {
+    async fn stop(mut self) -> Result<Runtime<Stopped, A>, <A as Lifecycle>::Error> {
         self.application.on_stop().await?;
 
         Ok(Runtime{
@@ -124,9 +127,75 @@ impl<A> Runtime<Stopped, A>
 where
     A: OnDestroy,
 {
-    pub async fn destroy(mut self) -> Result<(), <A as Lifecycle>::Error> {
+    async fn destroy(mut self) -> Result<(), <A as Lifecycle>::Error> {
         self.application.on_destroy().await?;
 
         Ok(())
+    }
+}
+
+impl<A> Runtime<Uninitialized, A>
+where
+    A: OnCreat + OnPrepare + OnStart,
+{
+    async fn run_on(self) -> Result<Runtime<Running, A>, <A as Lifecycle>::Error> {
+        let runtime = self.create().await?;
+        let runtime = runtime.prepare().await?;
+        runtime.start().await
+    }
+}
+
+impl<A> Runtime<Running, A>
+where
+    A: OnStop + OnDestroy,
+{
+    async fn run_off(
+        self,
+        termination: Termination,
+    ) -> Result<Termination, <A as Lifecycle>::Error> {
+        let runtime = self.stop().await?;
+        runtime.destroy().await?;
+
+        Ok(termination)
+    }
+}
+
+impl<A> Runtime<Uninitialized, A>
+where
+    A: OnCreat + OnPrepare + OnStart + OnStop + OnDestroy
+    + Run<Output = ApplicationOutcome>,
+{
+    pub async fn run(self) -> Result<Termination, <A as Lifecycle>::Error> {
+        let mut runtime = self.run_on().await?;
+
+        let outcome = runtime.application.run().await;
+
+        let termination = match outcome {
+            ApplicationOutcome::Stop => Termination::Stop,
+            ApplicationOutcome::Reboot => Termination::Reboot,
+            ApplicationOutcome::Shutdown => Termination::Shutdown,
+        };
+
+        runtime.run_off(termination).await
+    }
+}
+
+impl<A> Runtime<Uninitialized, A>
+where
+    A: OnCreat + OnPrepare + OnStart + OnSuspend + OnResume + OnStop + OnDestroy
+    + Run<Output = ApplicationOutcome>,
+{
+    pub async fn run_with_sleep(self) -> Result<Termination, <A as Lifecycle>::Error> {
+        let mut runtime= self.run_on().await?;
+
+        let outcome = runtime.application.run().await;
+
+        let termination = match outcome {
+            ApplicationOutcome::Stop => Termination::Stop,
+            ApplicationOutcome::Reboot => Termination::Reboot,
+            ApplicationOutcome::Shutdown => Termination::Shutdown,
+        };
+
+        runtime.run_off(termination).await
     }
 }

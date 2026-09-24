@@ -2682,6 +2682,7 @@ dependencies = [
  "panic-probe",
  "pump",
  "rp235x",
+ "runtime-core",
 ]
 
 [[package]]

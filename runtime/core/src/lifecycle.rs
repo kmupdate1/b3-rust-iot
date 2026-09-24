@@ -29,3 +29,11 @@ pub trait OnStop: Lifecycle {
 pub trait OnDestroy: Lifecycle {
     async fn on_destroy(&mut self) -> Result<(), Self::Error>;
 }
+
+pub trait Process:
+Lifecycle + OnCreat + OnPrepare + OnStart + OnStop + OnDestroy
+{}
+
+pub trait Suspendable:
+Lifecycle + OnSuspend+ OnResume
+{}

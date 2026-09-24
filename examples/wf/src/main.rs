@@ -1,6 +1,8 @@
 #![no_std]
 #![no_main]
 
+mod application;
+
 use core::default::Default;
 use capability::l3::Ipv4NetworkDevice;
 use capability::Wifi;
